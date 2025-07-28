@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Request Service | Service Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Request Service: {{ service.name }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>Service Details:</h5>
+                    <p>{{ service.description }}</p>
+                    <p><strong>Price: ${{ service.price }}</strong></p>
+                </div>
+                
+                <form method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.notes.label }}
+                        {{ form.notes(class="form-control", rows=5) }}
+                        {% for error in form.notes.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                        <small class="form-text text-muted">Please provide any specific instructions or requirements.</small>
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-success") }}
+                        <a href="{{ url_for('service.details', id=service.id) }}" class="btn btn-outline-secondary ml-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

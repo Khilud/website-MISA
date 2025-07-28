@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Service Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Your Dashboard</h2>
+        <hr>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Welcome, {{ current_user.username }}!</h4>
+            </div>
+            <div class="card-body">
+                <p>From here, you can view and manage your service requests.</p>
+                <a href="{{ url_for('dashboard.requests') }}" class="btn btn-primary">View My Requests</a>
+                <a href="{{ url_for('service.index') }}" class="btn btn-outline-primary ml-2">Browse Services</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Recent Service Requests</h4>
+            </div>
+            <div class="card-body">
+                {% if requests %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Service</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in requests[:5] %}
+                            <tr>
+                                <td>{{ request.id }}</td>
+                                <td>{{ request.service_type.name }}</td>
+                                <td>{{ request.request_date.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    {% if request.status == 'pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                    {% elif request.status == 'approved' %}
+                                    <span class="badge badge-primary">Approved</span>
+                                    {% elif request.status == 'completed' %}
+                                    <span class="badge badge-success">Completed</span>
+                                    {% elif request.status == 'cancelled' %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">You have no service requests yet.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

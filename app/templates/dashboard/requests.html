@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}My Requests | Service Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>My Service Requests</h2>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                {% if requests %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Service</th>
+                                <th>Request Date</th>
+                                <th>Completion Date</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in requests %}
+                            <tr>
+                                <td>{{ request.id }}</td>
+                                <td>{{ request.service_type.name }}</td>
+                                <td>{{ request.request_date.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    {% if request.completion_date %}
+                                    {{ request.completion_date.strftime('%Y-%m-%d') }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if request.status == 'pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                    {% elif request.status == 'approved' %}
+                                    <span class="badge badge-primary">Approved</span>
+                                    {% elif request.status == 'completed' %}
+                                    <span class="badge badge-success">Completed</span>
+                                    {% elif request.status == 'cancelled' %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if request.notes %}
+                                    {{ request.notes|truncate(30) }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">You have no service requests yet.</div>
+                <a href="{{ url_for('service.index') }}" class="btn btn-primary">Browse Services</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

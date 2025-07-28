@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Update Request | Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>Request Details:</h5>
+                    <p><strong>Client:</strong> {{ service_request.client.username }}</p>
+                    <p><strong>Service:</strong> {{ service_request.service_type.name }}</p>
+                    <p><strong>Request Date:</strong> {{ service_request.request_date.strftime('%Y-%m-%d') }}</p>
+                    <p><strong>Client Notes:</strong> {{ service_request.notes or 'None' }}</p>
+                </div>
+
+                <form method="post" action="{{ url_for('admin.update_request', id=service_request.id) }}">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.status.label }}
+                        {{ form.status(class="form-control") }}
+                        {% for error in form.status.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.notes.label }}
+                        {{ form.notes(class="form-control", rows=5) }}
+                        {% for error in form.notes.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                        <small class="form-text text-muted">Add notes or feedback about this request.</small>
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('admin.requests') }}" class="btn btn-outline-secondary ml-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

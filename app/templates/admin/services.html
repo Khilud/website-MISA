@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Services | Admin{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h2>Manage Services</h2>
+    </div>
+    <div class="col-md-6 text-right">
+        <a href="{{ url_for('admin.add_service') }}" class="btn btn-primary">Add New Service</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                {% if services %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for service in services %}
+                            <tr>
+                                <td>{{ service.id }}</td>
+                                <td>{{ service.name }}</td>
+                                <td>${{ service.price }}</td>
+                                <td>
+                                    {% if service.is_available %}
+                                    <span class="badge badge-success">Available</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">Unavailable</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('admin.edit_service', id=service.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">No services found. <a href="{{ url_for('admin.add_service') }}">Add a new service</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
