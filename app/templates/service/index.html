@@ -6,22 +6,50 @@
 <div class="row">
     <div class="col-md-12">
         <h2>Available Services</h2>
+        <p class="lead">Choose from our comprehensive range of services designed for international students</p>
         <hr>
     </div>
 </div>
 
+<!-- Service Categories Navigation -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="btn-group" role="group" aria-label="Service categories">
+            <button type="button" class="btn btn-outline-primary active" onclick="showCategory('all')" style="border-color: #1800ad; color: #1800ad;">All Services</button>
+            <button type="button" class="btn btn-outline-primary" onclick="showCategory('Documentation')" style="border-color: #1800ad; color: #1800ad;">Documentation</button>
+            <button type="button" class="btn btn-outline-primary" onclick="showCategory('Housing')" style="border-color: #1800ad; color: #1800ad;">Housing</button>
+            <button type="button" class="btn btn-outline-primary" onclick="showCategory('Language')" style="border-color: #1800ad; color: #1800ad;">Language</button>
+            <button type="button" class="btn btn-outline-primary" onclick="showCategory('Transportation')" style="border-color: #1800ad; color: #1800ad;">Transportation</button>
+        </div>
+    </div>
+</div>
+
 <div class="row">
-    {% for service in services %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">{{ service.name }}</h5>
-                <p class="card-text">{{ service.description|truncate(150) }}</p>
-                <p class="card-text"><strong>${{ service.price }}</strong></p>
+    {% set categories = services|groupby('category') %}
+    {% for category, category_services in categories %}
+    <div class="col-md-12 mb-4 category-section" data-category="{{ category }}">
+        <h3 class="text-primary mb-3">{{ category }}</h3>
+        <div class="row">
+            {% for service in category_services %}
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 service-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ service.name }}</h5>
+                        <p class="card-text">{{ service.description|truncate(120) }}</p>
+                        {% if service.subcategory %}
+                        <span class="badge badge-secondary mb-2">{{ service.subcategory }}</span>
+                        {% endif %}
+                        <p class="card-text"><strong>Price: ---</strong></p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ url_for('service.details', id=service.id) }}" class="btn btn-primary btn-sm">View Details</a>
+                        {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('service.request_specific_service', id=service.id) }}" class="btn btn-success btn-sm">Request Now</a>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            <div class="card-footer">
-                <a href="{{ url_for('service.details', id=service.id) }}" class="btn btn-primary">View Details</a>
-            </div>
+            {% endfor %}
         </div>
     </div>
     {% else %}
@@ -30,4 +58,38 @@
     </div>
     {% endfor %}
 </div>
+
+<script>
+function showCategory(category) {
+    // Update button states
+    document.querySelectorAll('.btn-group .btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.backgroundColor = 'transparent';
+        btn.style.color = '#1800ad';
+    });
+    
+    // Style active button
+    event.target.classList.add('active');
+    event.target.style.backgroundColor = '#1800ad';
+    event.target.style.color = 'white';
+    
+    // Show/hide categories
+    document.querySelectorAll('.category-section').forEach(section => {
+        if (category === 'all' || section.dataset.category === category) {
+            section.style.display = 'block';
+        } else {
+            section.style.display = 'none';
+        }
+    });
+}
+
+// Set initial active button style
+document.addEventListener('DOMContentLoaded', function() {
+    const activeBtn = document.querySelector('.btn-group .btn.active');
+    if (activeBtn) {
+        activeBtn.style.backgroundColor = '#1800ad';
+        activeBtn.style.color = 'white';
+    }
+});
+</script>
 {% endblock %}

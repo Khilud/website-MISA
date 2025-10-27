@@ -24,6 +24,8 @@ class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
     description = db.Column(db.Text)
+    category = db.Column(db.String(50), nullable=False)
+    subcategory = db.Column(db.String(50))
     price = db.Column(db.Float)
     is_available = db.Column(db.Boolean, default=True)
     requests = db.relationship('ServiceRequest', backref='service_type', lazy='dynamic')

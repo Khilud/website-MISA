@@ -16,13 +16,61 @@ def details(id):
     service = Service.query.get_or_404(id)
     return render_template('service/details.html', service=service)
 
-@service.route('/<int:id>/request', methods=['GET', 'POST'])
+@service.route('/request', methods=['GET', 'POST'])
 @login_required
-def request_service(id):
+def request_service():
+    form = ServiceRequestForm()
+    
+    # Populate the service choices
+    services = Service.query.filter_by(is_available=True).all()
+    form.service_id.choices = [(s.id, f"{s.category} - {s.name}") for s in services]
+    
+    if form.validate_on_submit():
+        # Check if user already has a pending request for this service
+        existing_request = ServiceRequest.query.filter_by(
+            user_id=current_user.id,
+            service_id=form.service_id.data,
+            status='pending'
+        ).first()
+        
+        if existing_request:
+            flash('You already have a pending request for this service.')
+            return redirect(url_for('service.request_service'))
+        
+        service_request = ServiceRequest(
+            user_id=current_user.id,
+            service_id=form.service_id.data,
+            notes=form.notes.data
+        )
+        db.session.add(service_request)
+        db.session.commit()
+        flash('Service request submitted successfully!')
+        return redirect(url_for('dashboard.requests'))
+    
+    return render_template('service/request.html', form=form, services=services)
+
+@service.route('/<int:id>/request', methods=['GET', 'POST'])
+@login_required 
+def request_specific_service(id):
     service = Service.query.get_or_404(id)
     form = ServiceRequestForm()
     
+    # Pre-select the service
+    form.service_id.choices = [(service.id, f"{service.category} - {service.name}")]
+    form.service_id.data = service.id
+    
     if form.validate_on_submit():
+        # Check if user already has a pending request for this service
+        existing_request = ServiceRequest.query.filter_by(
+            user_id=current_user.id,
+            service_id=service.id,
+            status='pending'
+        ).first()
+        
+        if existing_request:
+            flash('You already have a pending request for this service.')
+            return redirect(url_for('service.details', id=service.id))
+        
         service_request = ServiceRequest(
             user_id=current_user.id,
             service_id=service.id,

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, FloatField, SelectField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length, Optional
 from app.models import User
 
 class LoginForm(FlaskForm):
@@ -30,20 +30,45 @@ class RegistrationForm(FlaskForm):
 class ServiceForm(FlaskForm):
     name = StringField('Service Name', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
+    category = SelectField('Category', choices=[
+        ('Documentation', 'Documentation'),
+        ('Housing', 'Housing'),
+        ('Language', 'Language'),
+        ('Transportation', 'Transportation')
+    ], validators=[DataRequired()])
+    subcategory = SelectField('Subcategory', choices=[
+        ('', 'Select subcategory...'),
+        ('Appointments', 'Appointments'),
+        ('ISEE', 'ISEE'),
+        ('Residence Permit', 'Residence Permit'),
+        ('Enrollment', 'Enrollment'),
+        ('Permanent', 'Permanent Housing'),
+        ('Temporary', 'Temporary Housing'),
+        ('Italian Lessons', 'Italian Lessons'),
+        ('English Lessons', 'English Lessons'),
+        ('Airport Pickup', 'Airport Pickup')
+    ], validators=[Optional()])
     price = FloatField('Price', validators=[DataRequired()])
-    is_available = BooleanField('Available')
+    is_available = BooleanField('Available', default=True)
     submit = SubmitField('Submit')
 
 class ServiceRequestForm(FlaskForm):
+    service_id = SelectField('Service', coerce=int, validators=[DataRequired()])
     notes = TextAreaField('Special Instructions', validators=[Length(max=500)])
     submit = SubmitField('Submit Request')
+    
+    def __init__(self, *args, **kwargs):
+        super(ServiceRequestForm, self).__init__(*args, **kwargs)
+        # This will be populated in the route with available services
 
 class UpdateRequestForm(FlaskForm):
     status = SelectField('Status', choices=[
         ('pending', 'Pending'),
+        ('processing', 'Processing'),
         ('approved', 'Approved'),
         ('completed', 'Completed'),
+        ('done', 'Done'),
         ('cancelled', 'Cancelled')
     ])
-    notes = TextAreaField('Notes')
+    notes = TextAreaField('Admin Notes')
     submit = SubmitField('Update')

@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Service Portal{% endblock %}</title>
+    <title>{% block title %}MISC{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="wrapper d-flex flex-column min-vh-100">
 
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1800ad !important;">
             <div class="container">
-                <a class="navbar-brand" href="{{ url_for('main.index') }}">Service Portal</a>
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="MISC Logo" class="navbar-logo">
+                    MISC
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -56,30 +60,86 @@
             </div>    
         </nav>
 
-        <main class="container mt-4 flex-grow-1">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <div class="row">
-                <div class="col-md-12">
-                    {% for message in messages %}
-                    <div class="alert alert-info" role="alert">{{ message }}</div>
-                    {% endfor %}
+        <main class="flex-grow-1">
+            <div class="container mt-4">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="row">
+                    <div class="col-md-12">
+                        {% for message in messages %}
+                        <div class="alert alert-info" role="alert">{{ message }}</div>
+                        {% endfor %}
+                    </div>
                 </div>
+                {% endif %}
+                {% endwith %}
             </div>
-            {% endif %}
-            {% endwith %}
 
             {% block content %}{% endblock %}
         </main>
 
-        <footer class="bg-dark text-white mt-auto py-3">
+        <footer class="footer-modern mt-auto">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6">
-                        <p>&copy; 2025 Service Portal. All rights reserved.</p>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h5 class="footer-title">MISC</h5>
+                            <p class="footer-description">We remove the stress of Italian bureaucracy and daily life so you can focus on studying.</p>
+                            <div class="social-links">
+                                <a href="https://www.instagram.com/messinainternationalstudents/" target="_blank" class="social-link">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="https://www.facebook.com/misc.messina" target="_blank" class="social-link">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="mailto:internationalstudentsmessina@gmail.com" class="social-link">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 text-right">
-                        <p>Designed by Your Company</p>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h6 class="footer-subtitle">Quick Links</h6>
+                            <ul class="footer-links">
+                                <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                                <li><a href="{{ url_for('service.index') }}">Services</a></li>
+                                <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
+                                {% if current_user.is_authenticated %}
+                                <li><a href="{{ url_for('dashboard.index') }}">Dashboard</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h6 class="footer-subtitle">Services</h6>
+                            <ul class="footer-links">
+                                <li><a href="{{ url_for('service.index') }}">Bureaucratic Assistance</a></li>
+                                <li><a href="{{ url_for('service.index') }}">Housing Support</a></li>
+                                <li><a href="{{ url_for('service.index') }}">Language Support</a></li>
+                                <li><a href="{{ url_for('service.index') }}">Transportation</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h6 class="footer-subtitle">Contact Info</h6>
+                            <div class="contact-info">
+                                <p><i class="fas fa-map-marker-alt"></i> Messina, Sicily, Italy</p>
+                                <p><i class="fas fa-envelope"></i> internationalstudentsmessina@gmail.com</p>
+                                <p><i class="fas fa-phone"></i> +39 352 063 4697</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="footer-divider">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="footer-copyright">&copy; 2025 MISC - Messina International Students Cooperative. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-right">
+                        <p class="footer-credit">Empowering International Students</p>
                     </div>
                 </div>
             </div>

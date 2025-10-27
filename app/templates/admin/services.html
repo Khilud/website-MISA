@@ -23,6 +23,8 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
+                                <th>Category</th>
+                                <th>Subcategory</th>
                                 <th>Price</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -33,7 +35,15 @@
                             <tr>
                                 <td>{{ service.id }}</td>
                                 <td>{{ service.name }}</td>
-                                <td>${{ service.price }}</td>
+                                <td><span class="badge badge-primary">{{ service.category }}</span></td>
+                                <td>
+                                    {% if service.subcategory %}
+                                    <span class="badge badge-secondary">{{ service.subcategory }}</span>
+                                    {% else %}
+                                    <small class="text-muted">-</small>
+                                    {% endif %}
+                                </td>
+                                <td><strong>---</strong></td>
                                 <td>
                                     {% if service.is_available %}
                                     <span class="badge badge-success">Available</span>
@@ -42,6 +52,7 @@
                                     {% endif %}
                                 </td>
                                 <td>
+                                    <a href="{{ url_for('service.details', id=service.id) }}" class="btn btn-sm btn-outline-info" title="View Details">View</a>
                                     <a href="{{ url_for('admin.edit_service', id=service.id) }}" class="btn btn-sm btn-primary">Edit</a>
                                 </td>
                             </tr>

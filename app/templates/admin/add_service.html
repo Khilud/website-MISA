@@ -26,12 +26,36 @@
                         <span class="text-danger">{{ error }}</span>
                         {% endfor %}
                     </div>
-                    <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.category.label }}
+                                {{ form.category(class="form-control", id="categorySelect") }}
+                                {% for error in form.category.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.subcategory.label }}
+                                {{ form.subcategory(class="form-control", id="subcategorySelect") }}
+                                {% for error in form.subcategory.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display: none;">
                         {{ form.price.label }}
-                        {{ form.price(class="form-control") }}
+                        {{ form.price(class="form-control", step="0.01", min="0", value="0") }}
                         {% for error in form.price.errors %}
                         <span class="text-danger">{{ error }}</span>
                         {% endfor %}
+                        <small class="form-text text-muted">Price in Euros (€)</small>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> <strong>Note:</strong> Price information is handled internally for administrative purposes only.
                     </div>
                     <div class="form-group form-check">
                         {{ form.is_available(class="form-check-input") }}
@@ -46,4 +70,38 @@
         </div>
     </div>
 </div>
+
+<script>
+// Handle subcategory filtering based on category selection
+document.getElementById('categorySelect').addEventListener('change', function() {
+    const category = this.value;
+    const subcategorySelect = document.getElementById('subcategorySelect');
+    const subcategoryOptions = subcategorySelect.querySelectorAll('option');
+    
+    // Show all options first
+    subcategoryOptions.forEach(option => {
+        option.style.display = 'block';
+    });
+    
+    // Filter subcategories based on category
+    const categoryMapping = {
+        'Documentation': ['Appointments', 'ISEE', 'Residence Permit', 'Enrollment'],
+        'Housing': ['Permanent', 'Temporary'],
+        'Language': ['Italian Lessons', 'English Lessons'],
+        'Transportation': ['Airport Pickup']
+    };
+    
+    if (category && categoryMapping[category]) {
+        subcategoryOptions.forEach(option => {
+            if (option.value && !categoryMapping[category].includes(option.value)) {
+                option.style.display = 'none';
+            }
+        });
+        // Reset selection if current selection is not valid
+        if (subcategorySelect.value && !categoryMapping[category].includes(subcategorySelect.value)) {
+            subcategorySelect.value = '';
+        }
+    }
+});
+</script>
 {% endblock %}

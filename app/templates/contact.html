@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us | MISC{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="contact-header text-center mb-5">
+                <h1 class="display-4 text-primary mb-3">Contact Us</h1>
+                <p class="lead">Get in touch with MISC - We're here to help you with your journey in Messina</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="contact-info-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope fa-2x text-primary"></i>
+                        </div>
+                        <h5>Email Us</h5>
+                        <p>internationalstudentsmessina@gmail.com</p>
+                        <a href="mailto:internationalstudentsmessina@gmail.com" class="btn btn-outline-primary">Send Email</a>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="contact-info-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt fa-2x text-primary"></i>
+                        </div>
+                        <h5>Call Us</h5>
+                        <p>+39 352 063 4697</p>
+                        <a href="tel:+393520634697" class="btn btn-outline-primary">Call Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="social-section text-center mt-5">
+                <h4 class="mb-4">Follow Us on Social Media</h4>
+                <div class="social-buttons">
+                    <a href="https://www.instagram.com/messinainternationalstudents/" target="_blank" class="btn btn-instagram">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                    <a href="https://www.facebook.com/misc.messina" target="_blank" class="btn btn-facebook">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.contact-info-card {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.contact-info-card:hover {
+    transform: translateY(-5px);
+}
+
+.contact-icon {
+    margin-bottom: 1.5rem;
+}
+
+.contact-info-card h5 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-instagram:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(240, 148, 51, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-facebook {
+    background: #1877f2;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-facebook:hover {
+    background: #166fe5;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+    color: white;
+    text-decoration: none;
+}
+</style>
+{% endblock %}

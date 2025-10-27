@@ -7,32 +7,75 @@
     <div class="col-md-8 offset-md-2">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h3 class="mb-0">Request Service: {{ service.name }}</h3>
+                <h3 class="mb-0">
+                    {% if service %}
+                        Request Service: {{ service.name }}
+                    {% else %}
+                        Request a Service
+                    {% endif %}
+                </h3>
             </div>
             <div class="card-body">
+                {% if service %}
+                <!-- Single service request -->
                 <div class="mb-4">
                     <h5>Service Details:</h5>
                     <p>{{ service.description }}</p>
-                    <p><strong>Price: ${{ service.price }}</strong></p>
+                    <p><strong>Category:</strong> {{ service.category }}</p>
+                    {% if service.subcategory %}
+                    <p><strong>Type:</strong> {{ service.subcategory }}</p>
+                    {% endif %}
+                    <p><strong>Price: ---</strong></p>
                 </div>
+                {% else %}
+                <!-- Multiple service selection -->
+                <div class="mb-4">
+                    <h5>Available Services:</h5>
+                    <p>Choose a service from the dropdown below and provide any additional information.</p>
+                </div>
+                {% endif %}
                 
                 <form method="post">
                     {{ form.hidden_tag() }}
+                    
+                    {% if not service %}
                     <div class="form-group">
-                        {{ form.notes.label }}
-                        {{ form.notes(class="form-control", rows=5) }}
+                        {{ form.service_id.label(class="form-label") }}
+                        {{ form.service_id(class="form-control", id="serviceSelect") }}
+                        {% for error in form.service_id.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Service details display -->
+                    <div id="serviceDetails" class="alert alert-info" style="display: none;">
+                        <div id="serviceInfo"></div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="form-group">
+                        {{ form.notes.label(class="form-label") }}
+                        {{ form.notes(class="form-control", rows=5, placeholder="Please provide any specific instructions, requirements, or additional information...") }}
                         {% for error in form.notes.errors %}
                         <span class="text-danger">{{ error }}</span>
                         {% endfor %}
-                        <small class="form-text text-muted">Please provide any specific instructions or requirements.</small>
+                        <small class="form-text text-muted">Optional: Any special requirements or instructions for this service.</small>
                     </div>
+                    
                     <div class="form-group">
-                        {{ form.submit(class="btn btn-success") }}
-                        <a href="{{ url_for('service.details', id=service.id) }}" class="btn btn-outline-secondary ml-2">Cancel</a>
+                        {{ form.submit(class="btn btn-success btn-lg") }}
+                        <a href="{{ url_for('service.index') }}" class="btn btn-outline-secondary btn-lg ml-2">Cancel</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+{% if not service and services %}
+<!-- Service data for JavaScript -->
+<div id="service-data" style="display: none;" 
+     data-services="{{ services|tojson|e }}"></div>
+<script src="{{ url_for('static', filename='js/service-request.js') }}"></script>
+{% endif %}
 {% endblock %}

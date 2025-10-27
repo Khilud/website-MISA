@@ -48,6 +48,8 @@ def add_service():
         service = Service(
             name=form.name.data,
             description=form.description.data,
+            category=form.category.data,
+            subcategory=form.subcategory.data if form.subcategory.data else None,
             price=form.price.data,
             is_available=form.is_available.data
         )
@@ -66,6 +68,8 @@ def edit_service(id):
     if form.validate_on_submit():
         service.name = form.name.data
         service.description = form.description.data
+        service.category = form.category.data
+        service.subcategory = form.subcategory.data if form.subcategory.data else None
         service.price = form.price.data
         service.is_available = form.is_available.data
         db.session.commit()

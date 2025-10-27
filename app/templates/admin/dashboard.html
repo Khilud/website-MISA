@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row admin-dashboard">
     <div class="col-md-3 mb-4">
         <div class="card bg-primary text-white">
             <div class="card-body">
@@ -21,11 +21,11 @@
         </div>
     </div>
     <div class="col-md-3 mb-4">
-        <div class="card bg-success text-white">
+        <div class="card text-dark" style="background-color: #ffde59;">
             <div class="card-body">
                 <h5 class="card-title">Services</h5>
                 <h2 class="display-4">{{ services_count }}</h2>
-                <a href="{{ url_for('admin.services') }}" class="text-white">Manage Services</a>
+                <a href="{{ url_for('admin.services') }}" class="text-dark font-weight-bold">Manage Services</a>
             </div>
         </div>
     </div>

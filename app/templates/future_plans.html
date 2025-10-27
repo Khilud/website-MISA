@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Plans | MISC - Messina International Students Cooperative</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        :root {
+            --primary-blue: #1800ad;
+            --accent-yellow: #fbbf24;
+            --light-blue: #f0f8ff;
+            --gradient-text: linear-gradient(135deg, #1800ad 0%, #fbbf24 100%);
+            --text-dark: #2d3748;
+            --text-muted: #718096;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .navbar {
+            box-shadow: 0 2px 10px rgba(24, 0, 173, 0.1);
+        }
+
+        .navbar-logo {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .hero-section {
+            background: url("{{ url_for('static', filename='img/messina.jpeg') }}") center/cover no-repeat;
+            color: white;
+            padding: 100px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff" opacity="0.1"><polygon points="0,0 1000,0 1000,100 0,80"/></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            color: white;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7), 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .vision-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        .vision-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(24, 0, 173, 0.1);
+            border: 1px solid rgba(24, 0, 173, 0.1);
+            margin-bottom: 3rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .vision-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 50px rgba(24, 0, 173, 0.15);
+        }
+
+        .vision-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .vision-description {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .commitment-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .commitment-item {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border-radius: 15px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1rem;
+            border-left: 5px solid var(--primary-blue);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .commitment-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 20px rgba(24, 0, 173, 0.1);
+        }
+
+        .commitment-item::before {
+            content: '🎯';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+
+        .commitment-text {
+            margin-left: 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .future-plans-section {
+            padding: 80px 0;
+            background: url("{{ url_for('static', filename='img/Messina_Pilone.jpg') }}") center/cover no-repeat;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .plan-category {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .plan-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-yellow) 100%);
+        }
+
+        .plan-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .plan-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        .plan-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+            color: var(--accent-yellow);
+        }
+
+        .plan-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .plan-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+        }
+
+        .plan-item:last-child {
+            border-bottom: none;
+        }
+
+        .plan-item:hover {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f8ff 100%);
+            border-radius: 10px;
+            padding-left: 1rem;
+            margin: 0 -1rem;
+        }
+
+        .plan-item-icon {
+            color: var(--primary-blue);
+            margin-right: 1rem;
+            margin-top: 0.2rem;
+            font-size: 1.1rem;
+        }
+
+        .plan-item-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .founder-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 80px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .founder-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(24, 0, 173, 0.1);
+            border: 1px solid rgba(24, 0, 173, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .founder-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 50px rgba(24, 0, 173, 0.15);
+        }
+
+        .founder-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .founder-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 2rem;
+            border: 5px solid var(--primary-blue);
+            box-shadow: 0 10px 20px rgba(24, 0, 173, 0.2);
+        }
+
+        .founder-name {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .founder-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--accent-yellow) 0%, #f59e0b 100%);
+            padding: 60px 0;
+            text-align: center;
+            color: white;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-cta {
+            background: var(--primary-blue);
+            color: white;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 10px 20px rgba(24, 0, 173, 0.3);
+        }
+
+        .btn-cta:hover {
+            background: #1400a0;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(24, 0, 173, 0.4);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .vision-card,
+            .plan-category {
+                padding: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper d-flex flex-column min-vh-100">
+
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1800ad !important;">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="MISC Logo" class="navbar-logo">
+                    MISC
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('service.index') }}">Services</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ url_for('main.future_plans') }}">Future Plans</a>
+                        </li>
+                        {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('dashboard.index') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>    
+        </nav>
+
+        <main class="flex-grow-1">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <div class="container">
+                        <div class="row justify-content-center text-center">
+                            <div class="col-lg-8">
+                                <h1 class="hero-title">Our Vision & Future</h1>
+                                <p class="hero-subtitle">Building tomorrow's international student community today</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vision Section -->
+            <section class="vision-section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="vision-card">
+                                <h2 class="vision-title">Vision of MISC</h2>
+                                <p class="vision-description">
+                                    The Messina International Student Cooperative (MISC) is more than a student community—it is a home for international students to feel welcome, connected, and empowered in Messina.
+                                </p>
+                                
+                                <h3 style="font-size: 1.8rem; font-weight: 600; margin-bottom: 2rem; color: var(--primary-blue); text-align: center;">We are committed to:</h3>
+                                
+                                <ul class="commitment-list">
+                                    <li class="commitment-item">
+                                        <div class="commitment-text">Working together for our development, creating opportunities for every member.</div>
+                                    </li>
+                                    <li class="commitment-item">
+                                        <div class="commitment-text">Unlocking our potential together, by learning, collaborating, and supporting one another.</div>
+                                    </li>
+                                    <li class="commitment-item">
+                                        <div class="commitment-text">Building a place to study, thrive, and grow, both academically and personally.</div>
+                                    </li>
+                                    <li class="commitment-item">
+                                        <div class="commitment-text">Fostering a multicultural, multilingual, and interactive community that values diversity and mutual respect.</div>
+                                    </li>
+                                    <li class="commitment-item">
+                                        <div class="commitment-text">Introducing Messina to international students, helping them integrate into local culture and society.</div>
+                                    </li>
+                                    <li class="commitment-item">
+                                        <div class="commitment-text">Creating a business hub for students, where unique ideas and skills from different countries come together—covering entrepreneurship, trade, medical knowledge, agriculture, tourism, and shared travel experiences.</div>
+                                    </li>
+                                </ul>
+                                
+                                <p style="font-size: 1.3rem; font-weight: 600; text-align: center; margin-top: 3rem; color: var(--primary-blue);">
+                                    Through this vision, MISC becomes a bridge between students, local communities, and international opportunities.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Future Plans Section -->
+            <section class="future-plans-section">
+                <div class="container">
+                    <h2 class="section-title">🚀 Future Plans & Activities</h2>
+                    <div style="text-align: center; margin-bottom: 4rem;">
+                        <p style="font-size: 1.3rem; color: var(--text-dark); font-weight: 600; position: relative; z-index: 2; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 15px 30px; border-radius: 50px; display: inline-block; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);">
+                            To achieve our mission, we plan to:
+                        </p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="plan-category">
+                                <h3 class="plan-title">
+                                    <i class="fas fa-lightbulb plan-icon"></i>
+                                    Business & Innovation Hub
+                                </h3>
+                                <ul class="plan-list">
+                                    <li class="plan-item">
+                                        <i class="fas fa-rocket plan-item-icon"></i>
+                                        <div class="plan-item-text">Create a platform where international students can share and implement entrepreneurial ideas.</div>
+                                    </li>
+                                    <li class="plan-item">
+                                        <i class="fas fa-chalkboard-teacher plan-item-icon"></i>
+                                        <div class="plan-item-text">Organize workshops on startup development, trading, and global networking.</div>
+                                    </li>
+                                    <li class="plan-item">
+                                        <i class="fas fa-handshake plan-item-icon"></i>
+                                        <div class="plan-item-text">Connect students with local businesses for internships and collaborative projects.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6 mb-4">
+                            <div class="plan-category">
+                                <h3 class="plan-title">
+                                    <i class="fas fa-globe plan-icon"></i>
+                                    Cultural & Knowledge Exchange
+                                </h3>
+                                <ul class="plan-list">
+                                    <li class="plan-item">
+                                        <i class="fas fa-utensils plan-item-icon"></i>
+                                        <div class="plan-item-text">Host events that showcase food, traditions, and innovations from members' home countries.</div>
+                                    </li>
+                                    <li class="plan-item">
+                                        <i class="fas fa-language plan-item-icon"></i>
+                                        <div class="plan-item-text">Launch language exchange programs and multicultural festivals.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6 mb-4">
+                            <div class="plan-category">
+                                <h3 class="plan-title">
+                                    <i class="fas fa-chart-line plan-icon"></i>
+                                    Career & Skills Development
+                                </h3>
+                                <ul class="plan-list">
+                                    <li class="plan-item">
+                                        <i class="fas fa-user-tie plan-item-icon"></i>
+                                        <div class="plan-item-text">Provide mentorship sessions with local entrepreneurs and professionals.</div>
+                                    </li>
+                                    <li class="plan-item">
+                                        <i class="fas fa-laptop-code plan-item-icon"></i>
+                                        <div class="plan-item-text">Offer training in digital skills, agriculture, tourism, and medical knowledge sharing.</div>
+                                    </li>
+                                    <li class="plan-item">
+                                        <i class="fas fa-briefcase plan-item-icon"></i>
+                                        <div class="plan-item-text">Support students in building portfolios and networking with international companies.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6 mb-4">
+                            <div class="plan-category">
+                                <h3 class="plan-title">
+                                    <i class="fas fa-map-marked-alt plan-icon"></i>
+                                    Tourism & Community Engagement
+                                </h3>
+                                <ul class="plan-list">
+                                    <li class="plan-item">
+                                        <i class="fas fa-route plan-item-icon"></i>
+                                        <div class="plan-item-text">Develop student-led travel experiences to promote Messina's culture and history.</div>
+                                    </li>
+                                    <li class="plan-item">
+                                        <i class="fas fa-leaf plan-item-icon"></i>
+                                        <div class="plan-item-text">Collaborate with local communities to boost sustainable tourism projects.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-12 mb-4">
+                            <div class="plan-category">
+                                <h3 class="plan-title">
+                                    <i class="fas fa-network-wired plan-icon"></i>
+                                    Global Impact Network
+                                </h3>
+                                <ul class="plan-list">
+                                    <li class="plan-item">
+                                        <i class="fas fa-globe-americas plan-item-icon"></i>
+                                        <div class="plan-item-text">Build a network that links Messina with the home countries of our members.</div>
+                                    </li>
+                                    <li class="plan-item">
+                                        <i class="fas fa-exchange-alt plan-item-icon"></i>
+                                        <div class="plan-item-text">Facilitate knowledge transfer, trade opportunities, and cultural diplomacy.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Call to Action Section -->
+            <section class="cta-section">
+                <div class="container">
+                    <div class="row justify-content-center text-center">
+                        <div class="col-lg-8">
+                            <h2 class="cta-title">Join Our Vision</h2>
+                            <p class="cta-subtitle">Be part of building the future of international education in Messina</p>
+                            <a href="{{ url_for('service.index') }}" class="btn-cta">Explore Our Services</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Founder Section -->
+            <section class="founder-section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="founder-card">
+                                <h2 class="founder-title">Founder of MISC</h2>
+                                <img src="{{ url_for('static', filename='img/luca.jpg') }}" alt="Luca Limone - Founder of MISC" class="founder-image">
+                                <h3 class="founder-name">Luca Limone</h3>
+                                <p class="founder-subtitle">Visionary Leader & International Business Advocate</p>
+                                <p style="font-size: 1.1rem; line-height: 1.6; color: var(--text-dark); max-width: 600px; margin: 0 auto;">
+                                    The driving force behind MISC, dedicated to creating opportunities and fostering international collaboration among students in Messina.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer-modern mt-auto">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h5 class="footer-title">MISC</h5>
+                            <p class="footer-description">Your home away from home.</p>
+                            <div class="social-links">
+                                <a href="https://www.instagram.com/messinainternationalstudents/" target="_blank" class="social-link">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="https://www.facebook.com/misc.messina" target="_blank" class="social-link">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="mailto:internationalstudentsmessina@gmail.com" class="social-link">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h6 class="footer-subtitle">Quick Links</h6>
+                            <ul class="footer-links">
+                                <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                                <li><a href="{{ url_for('service.index') }}">Services</a></li>
+                                <li><a href="{{ url_for('main.future_plans') }}">Future Plans</a></li>
+                                <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h6 class="footer-subtitle">Services</h6>
+                            <ul class="footer-links">
+                                <li><a href="{{ url_for('service.index') }}">Bureaucratic Assistance</a></li>
+                                <li><a href="{{ url_for('service.index') }}">Housing Support</a></li>
+                                <li><a href="{{ url_for('service.index') }}">Language Support</a></li>
+                                <li><a href="{{ url_for('service.index') }}">Transportation</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h6 class="footer-subtitle">Contact Info</h6>
+                            <div class="contact-info">
+                                <p><i class="fas fa-map-marker-alt"></i> Messina, Sicily, Italy</p>
+                                <p><i class="fas fa-envelope"></i> internationalstudentsmessina@gmail.com</p>
+                                <p><i class="fas fa-phone"></i> +39 352 063 4697</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="footer-divider">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="footer-copyright">&copy; 2025 MISC - Messina International Students Cooperative. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-right">
+                        <p class="footer-credit">Empowering International Students</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

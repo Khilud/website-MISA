@@ -1,46 +1,52 @@
 {% extends "base.html" %}
 
-{% block title %}Update Request | Admin{% endblock %}
+{% block title %}Page Not Found | Service Portal{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-8 offset-md-2">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-            </div>
-            <div class="card-body">
-                <div class="mb-4">
-                    <h5>Request Details:</h5>
-                    <p><strong>Client:</strong> {{ service_request.client.username }}</p>
-                    <p><strong>Service:</strong> {{ service_request.service_type.name }}</p>
-                    <p><strong>Request Date:</strong> {{ service_request.request_date.strftime('%Y-%m-%d') }}</p>
-                    <p><strong>Client Notes:</strong> {{ service_request.notes or 'None' }}</p>
+        <div class="text-center">
+            <div class="error-page">
+                <h1 class="error-code">404</h1>
+                <h2 class="error-title">Page Not Found</h2>
+                <p class="error-description">Sorry, the page you are looking for doesn't exist or has been moved.</p>
+                <div class="error-actions">
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary">Go Home</a>
+                    <a href="{{ url_for('service.index') }}" class="btn btn-outline-primary">View Services</a>
                 </div>
-
-                <form method="post" action="{{ url_for('admin.update_request', id=service_request.id) }}">
-                    {{ form.hidden_tag() }}
-                    <div class="form-group">
-                        {{ form.status.label }}
-                        {{ form.status(class="form-control") }}
-                        {% for error in form.status.errors %}
-                        <span class="text-danger">{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    <div class="form-group">
-                        {{ form.notes.label }}
-                        {{ form.notes(class="form-control", rows=5) }}
-                        {% for error in form.notes.errors %}
-                        <span class="text-danger">{{ error }}</span>
-                        {% endfor %}
-                        <small class="form-text text-muted">Add notes or feedback about this request.</small>
-                    </div>
-                    <div class="form-group">
-                        {{ form.submit(class="btn btn-primary") }}
-                        <a href="{{ url_for('admin.requests') }}" class="btn btn-outline-secondary ml-2">Cancel</a>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+.error-page {
+    padding: 4rem 2rem;
+}
+
+.error-code {
+    font-size: 8rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.error-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.error-description {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+}
+
+.error-actions .btn {
+    margin: 0 10px 10px 0;
+}
+</style>
 {% endblock %}

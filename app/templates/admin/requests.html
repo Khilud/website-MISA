@@ -37,12 +37,18 @@
                                 <td>
                                     {% if request.status == 'pending' %}
                                     <span class="badge badge-warning">Pending</span>
+                                    {% elif request.status == 'processing' %}
+                                    <span class="badge badge-info">Processing</span>
                                     {% elif request.status == 'approved' %}
                                     <span class="badge badge-primary">Approved</span>
                                     {% elif request.status == 'completed' %}
                                     <span class="badge badge-success">Completed</span>
+                                    {% elif request.status == 'done' %}
+                                    <span class="badge badge-success">Done</span>
                                     {% elif request.status == 'cancelled' %}
                                     <span class="badge badge-danger">Cancelled</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">{{ request.status|title }}</span>
                                     {% endif %}
                                 </td>
                                 <td>
