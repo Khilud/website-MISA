@@ -24,6 +24,7 @@ function initServiceRequest() {
     const serviceSelect = document.getElementById('serviceSelect');
     if (serviceSelect) {
         serviceSelect.addEventListener('change', handleServiceSelection);
+        handleServiceSelection.call(serviceSelect);
     }
 }
 
@@ -31,6 +32,11 @@ function handleServiceSelection() {
     const selectedId = this.value;
     const detailsDiv = document.getElementById('serviceDetails');
     const infoDiv = document.getElementById('serviceInfo');
+    const careerFieldsDiv = document.getElementById('careerFields');
+    const tourFieldsDiv = document.getElementById('tourFields');
+    const languageFieldsDiv = document.getElementById('languageFields');
+    const otherLanguageField = document.getElementById('otherLanguageField');
+    const translationDirectionField = document.getElementById('translationDirectionField');
     
     if (selectedId && serviceDetails[selectedId]) {
         const service = serviceDetails[selectedId];
@@ -42,8 +48,48 @@ function handleServiceSelection() {
             <p><strong>Price: ---</strong></p>
         `;
         detailsDiv.style.display = 'block';
+
+        if (careerFieldsDiv) {
+            const isCareer = service.category === 'Career' && ['Internship', 'Job Application'].includes(service.subcategory);
+            careerFieldsDiv.style.display = isCareer ? 'block' : 'none';
+        }
+
+        if (tourFieldsDiv) {
+            const isGroupTour = service.category === 'Group Tour' && service.subcategory === 'Sicily Tour';
+            tourFieldsDiv.style.display = isGroupTour ? 'block' : 'none';
+        }
+
+        if (languageFieldsDiv) {
+            const isLanguageOption = service.category === 'Language' && ['Other Language', 'Translation'].includes(service.subcategory);
+            languageFieldsDiv.style.display = isLanguageOption ? 'block' : 'none';
+        }
+
+        if (otherLanguageField) {
+            const isOtherLanguage = service.category === 'Language' && service.subcategory === 'Other Language';
+            otherLanguageField.style.display = isOtherLanguage ? 'block' : 'none';
+        }
+
+        if (translationDirectionField) {
+            const isTranslation = service.category === 'Language' && service.subcategory === 'Translation';
+            translationDirectionField.style.display = isTranslation ? 'block' : 'none';
+        }
     } else {
         detailsDiv.style.display = 'none';
+        if (careerFieldsDiv) {
+            careerFieldsDiv.style.display = 'none';
+        }
+        if (tourFieldsDiv) {
+            tourFieldsDiv.style.display = 'none';
+        }
+        if (languageFieldsDiv) {
+            languageFieldsDiv.style.display = 'none';
+        }
+        if (otherLanguageField) {
+            otherLanguageField.style.display = 'none';
+        }
+        if (translationDirectionField) {
+            translationDirectionField.style.display = 'none';
+        }
     }
 }
 

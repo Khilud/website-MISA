@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Employer Worker Request | MISA{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Employer Worker Request</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    Use this form to request a worker. You can ask for long-term support or short-term work
+                    such as one-day cleaning or event help.
+                </p>
+                <form method="post" action="{{ url_for('service.employer_request') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="form-group">
+                        {{ form.employer_name.label }}
+                        {{ form.employer_name(class="form-control", placeholder="Company name or contact person") }}
+                        {% for error in form.employer_name.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.work_category.label }}
+                        {{ form.work_category(class="form-control", placeholder="Example: Cleaning, Waiter, Delivery, Office Assistant") }}
+                        {% for error in form.work_category.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.work_type.label }}
+                        {{ form.work_type(class="form-control", id="workTypeSelect") }}
+                        {% for error in form.work_type.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group" id="shortTermDaysWrapper" style="display: none;">
+                        {{ form.short_term_days.label }}
+                        {{ form.short_term_days(class="form-control", min="1", placeholder="Example: 1") }}
+                        <small class="form-text text-muted">Required when you choose short-term.</small>
+                        {% for error in form.short_term_days.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.preferred_start_date.label }}
+                        {{ form.preferred_start_date(class="form-control") }}
+                        {% for error in form.preferred_start_date.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.email.label }}
+                                {{ form.email(class="form-control", placeholder="name@example.com") }}
+                                {% for error in form.email.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.phone_number.label }}
+                                {{ form.phone_number(class="form-control", placeholder="+39 ...") }}
+                                {% for error in form.phone_number.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.address.label }}
+                        {{ form.address(class="form-control", rows="2", placeholder="Street, city, postal code") }}
+                        {% for error in form.address.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.details.label }}
+                        {{ form.details(class="form-control", rows="4", placeholder="Shift hours, worker responsibilities, and any extra information") }}
+                        {% for error in form.details.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group mb-0">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const workTypeSelect = document.getElementById('workTypeSelect');
+    const shortTermDaysWrapper = document.getElementById('shortTermDaysWrapper');
+
+    function toggleShortTermDays() {
+        if (!workTypeSelect || !shortTermDaysWrapper) {
+            return;
+        }
+
+        if (workTypeSelect.value === 'short_term') {
+            shortTermDaysWrapper.style.display = 'block';
+        } else {
+            shortTermDaysWrapper.style.display = 'none';
+        }
+    }
+
+    toggleShortTermDays();
+    if (workTypeSelect) {
+        workTypeSelect.addEventListener('change', toggleShortTermDays);
+    }
+})();
+</script>
+{% endblock %}

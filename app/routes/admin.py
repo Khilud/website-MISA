@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
-from app.models import User, Service, ServiceRequest
-from app.forms import ServiceForm, UpdateRequestForm
+from app.models import User, Service, ServiceRequest, EmployerWorkerRequest
+from app.forms import ServiceForm, UpdateRequestForm, UpdateEmployerRequestStatusForm
 from datetime import datetime
 from functools import wraps
 
@@ -82,20 +82,40 @@ def edit_service(id):
 @admin_required
 def requests():
     requests = ServiceRequest.query.all()
-    return render_template('admin/requests.html', requests=requests)
+    employer_requests = EmployerWorkerRequest.query.order_by(EmployerWorkerRequest.request_date.desc()).all()
+    return render_template('admin/requests.html', requests=requests, employer_requests=employer_requests)
 
 @admin.route('/requests/<int:id>/update', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def update_request(id):
     service_request = ServiceRequest.query.get_or_404(id)
-    form = UpdateRequestForm(obj=service_request)
+    form = UpdateRequestForm()
     if form.validate_on_submit():
         service_request.status = form.status.data
         service_request.notes = form.notes.data
-        if form.status.data == 'completed':
+        if form.status.data in ['completed', 'done']:
             service_request.completion_date = datetime.utcnow()
         db.session.commit()
         flash('Request updated successfully!')
         return redirect(url_for('admin.requests'))
+    elif request.method == 'GET':
+        form.status.data = service_request.status
+        form.notes.data = service_request.notes
     return render_template('admin/update_request.html', form=form, service_request=service_request)
+
+
+@admin.route('/employer-requests/<int:id>/update', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def update_employer_request(id):
+    employer_request = EmployerWorkerRequest.query.get_or_404(id)
+    form = UpdateEmployerRequestStatusForm()
+    if form.validate_on_submit():
+        employer_request.status = form.status.data
+        db.session.commit()
+        flash('Employer request updated successfully!')
+        return redirect(url_for('admin.requests'))
+    elif request.method == 'GET':
+        form.status.data = employer_request.status
+    return render_template('admin/update_employer_request.html', form=form, employer_request=employer_request)

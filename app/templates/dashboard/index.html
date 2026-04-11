@@ -8,18 +8,17 @@
         <h2>Your Dashboard</h2>
         <hr>
     </div>
-</div>
+</div> 
 
 <div class="row mb-4">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="mb-0">Welcome, {{ current_user.username }}!</h4>
+                <h4 class="mb-0">Welcome, {{ current_user.display_name }}!</h4>
             </div>
             <div class="card-body">
                 <p>From here, you can view and manage your service requests.</p>
-                <a href="{{ url_for('dashboard.requests') }}" class="btn btn-primary">View My Requests</a>
-                <a href="{{ url_for('service.index') }}" class="btn btn-outline-primary ml-2">Browse Services</a>
+                <a href="{{ url_for('service.index') }}" class="btn btn-outline-primary">Browse Services</a>
             </div>
         </div>
     </div>
@@ -41,6 +40,7 @@
                                 <th>Service</th>
                                 <th>Date</th>
                                 <th>Status</th>
+                                <th>Notes</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,12 +52,25 @@
                                 <td>
                                     {% if request.status == 'pending' %}
                                     <span class="badge badge-warning">Pending</span>
+                                    {% elif request.status == 'processing' %}
+                                    <span class="badge badge-info">Processing</span>
                                     {% elif request.status == 'approved' %}
                                     <span class="badge badge-primary">Approved</span>
                                     {% elif request.status == 'completed' %}
                                     <span class="badge badge-success">Completed</span>
+                                    {% elif request.status == 'done' %}
+                                    <span class="badge badge-success">Done</span>
                                     {% elif request.status == 'cancelled' %}
                                     <span class="badge badge-danger">Cancelled</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">{{ request.status|title }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if request.notes %}
+                                    <small title="{{ request.notes }}">{{ request.notes|truncate(25) }}</small>
+                                    {% else %}
+                                    <small class="text-muted">-</small>
                                     {% endif %}
                                 </td>
                             </tr>

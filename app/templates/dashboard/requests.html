@@ -25,6 +25,7 @@
                                 <th>Completion Date</th>
                                 <th>Status</th>
                                 <th>Notes</th>
+                                <th>Career Details</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,17 +44,41 @@
                                 <td>
                                     {% if request.status == 'pending' %}
                                     <span class="badge badge-warning">Pending</span>
+                                    {% elif request.status == 'processing' %}
+                                    <span class="badge badge-info">Processing</span>
                                     {% elif request.status == 'approved' %}
                                     <span class="badge badge-primary">Approved</span>
                                     {% elif request.status == 'completed' %}
                                     <span class="badge badge-success">Completed</span>
+                                    {% elif request.status == 'done' %}
+                                    <span class="badge badge-success">Done</span>
                                     {% elif request.status == 'cancelled' %}
                                     <span class="badge badge-danger">Cancelled</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">{{ request.status|title }}</span>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if request.notes %}
-                                    {{ request.notes|truncate(30) }}
+                                    <details>
+                                        <summary class="text-primary" style="cursor: pointer;">View Notes</summary>
+                                        <div class="mt-2 p-2 bg-light rounded">
+                                            {{ request.notes }}
+                                        </div>
+                                    </details>
+                                    {% else %}
+                                    <small class="text-muted">-</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if request.degree_level or request.past_degree or request.experience or request.italian_language_level or request.languages %}
+                                    <small>
+                                        <strong>Degree Level:</strong> {{ request.degree_level or '-' }}<br>
+                                        <strong>Past Degree:</strong> {{ request.past_degree or '-' }}<br>
+                                        <strong>Experience:</strong> {{ request.experience|truncate(40) if request.experience else '-' }}<br>
+                                        <strong>Italian Level:</strong> {{ request.italian_language_level or '-' }}<br>
+                                        <strong>Other Languages:</strong> {{ request.languages or '-' }}
+                                    </small>
                                     {% else %}
                                     -
                                     {% endif %}

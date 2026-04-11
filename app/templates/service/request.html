@@ -54,6 +54,51 @@
                     {% endif %}
                     
                     <div class="form-group">
+                        <div id="tourFields" class="border rounded p-3 mb-3" {% if not service or service.category != 'Group Tour' %}style="display: none;"{% endif %}>
+                            <h5 class="mb-2">Group Tour Plan</h5>
+                            <p class="text-muted mb-3">Starting from 2 people, enjoy a full Sicily package with car rental and a local city guide.</p>
+                            <div class="form-group mb-0">
+                                {{ form.tour_cities.label(class="form-label") }}
+                                {{ form.tour_cities(class="form-control", placeholder="e.g. Taormina, Catania, Palermo") }}
+                                {% for error in form.tour_cities.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                                <small class="form-text text-muted">Type the cities you want to visit, separated by commas.</small>
+                            </div>
+                        </div>
+
+                        <div id="languageFields" class="border rounded p-3 mb-3" {% if not service or service.category != 'Language' or (service.subcategory not in ['Other Language', 'Translation']) %}style="display: none;"{% endif %}>
+                            <h5 class="mb-2">Language Request Details</h5>
+                            <p class="text-muted mb-3">Choose your language option so we can prepare the right support quickly.</p>
+                            <div id="otherLanguageField" class="form-group mb-3" {% if not service or service.subcategory != 'Other Language' %}style="display: none;"{% endif %}>
+                                {{ form.preferred_language.label(class="form-label") }}
+                                {{ form.preferred_language(class="form-control") }}
+                                {% for error in form.preferred_language.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div id="translationDirectionField" class="form-group mb-0" {% if not service or service.subcategory != 'Translation' %}style="display: none;"{% endif %}>
+                                <label class="form-label">Translation Languages</label>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2 mb-md-0">
+                                        {{ form.translation_from_language.label(class="form-label") }}
+                                        {{ form.translation_from_language(class="form-control") }}
+                                        {% for error in form.translation_from_language.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form.translation_to_language.label(class="form-label") }}
+                                        {{ form.translation_to_language(class="form-control") }}
+                                        {% for error in form.translation_to_language.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted">Choose the language pair, for example English to Italian.</small>
+                            </div>
+                        </div>
+
                         {{ form.notes.label(class="form-label") }}
                         {{ form.notes(class="form-control", rows=5, placeholder="Please provide any specific instructions, requirements, or additional information...") }}
                         {% for error in form.notes.errors %}
@@ -61,9 +106,50 @@
                         {% endfor %}
                         <small class="form-text text-muted">Optional: Any special requirements or instructions for this service.</small>
                     </div>
+
+                    <div id="careerFields" class="border rounded p-3 mb-3" {% if not is_career_service %}style="display: none;"{% endif %}>
+                        <h5 class="mb-3">Career Application Details</h5>
+                        <div class="form-group">
+                            {{ form.degree_level.label(class="form-label") }}
+                            {{ form.degree_level(class="form-control", placeholder="e.g. Bachelor's, Master's, PhD") }}
+                            {% for error in form.degree_level.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.past_degree.label(class="form-label") }}
+                            {{ form.past_degree(class="form-control", placeholder="e.g. BSc Computer Science") }}
+                            {% for error in form.past_degree.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.experience.label(class="form-label") }}
+                            {{ form.experience(class="form-control", rows=4, placeholder="Briefly describe your experience") }}
+                            {% for error in form.experience.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                            <small class="form-text text-muted">Optional</small>
+                        </div>
+                        <div class="form-group">
+                            {{ form.italian_language_level.label(class="form-label") }}
+                            {{ form.italian_language_level(class="form-control") }}
+                            {% for error in form.italian_language_level.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group mb-0">
+                            {{ form.languages.label(class="form-label") }}
+                            {{ form.languages(class="form-control", placeholder="e.g. English, Arabic, French") }}
+                            {% for error in form.languages.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                            <small class="form-text text-muted">Optional: add any languages besides Italian.</small>
+                        </div>
+                    </div>
                     
                     <div class="form-group">
-                        {{ form.submit(class="btn btn-success btn-lg") }}
+                        {{ form.submit(class="btn btn-info btn-lg") }}
                         <a href="{{ url_for('service.index') }}" class="btn btn-outline-secondary btn-lg ml-2">Cancel</a>
                     </div>
                 </form>

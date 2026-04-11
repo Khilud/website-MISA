@@ -87,8 +87,10 @@ document.getElementById('categorySelect').addEventListener('change', function() 
     const categoryMapping = {
         'Documentation': ['Appointments', 'ISEE', 'Residence Permit', 'Enrollment'],
         'Housing': ['Permanent', 'Temporary'],
-        'Language': ['Italian Lessons', 'English Lessons'],
-        'Transportation': ['Airport Pickup']
+        'Language': ['Italian Lessons', 'English Lessons', 'Other Language', 'Translation'],
+        'Transportation': ['Airport Pickup'],
+        'Group Tour': ['Sicily Tour'],
+        'Career': ['Internship', 'Job Application']
     };
     
     if (category && categoryMapping[category]) {

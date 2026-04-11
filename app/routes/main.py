@@ -9,7 +9,7 @@ main = Blueprint('main', __name__)
 def index():
     # Get limited services for featured section - 2 from each category
     featured_services = {}
-    categories = ['Documentation', 'Housing', 'Language', 'Transportation']
+    categories = ['Documentation', 'Housing', 'Language', 'Transportation', 'Group Tour', 'Medical', 'Career']
     
     for category in categories:
         services = Service.query.filter_by(category=category, is_available=True).limit(2).all()

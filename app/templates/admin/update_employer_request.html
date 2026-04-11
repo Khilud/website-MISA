@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Update Employer Request | Admin{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Update Employer Request #{{ employer_request.id }}</h2>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-3">
+                    <p class="mb-1"><strong>Employer:</strong> {{ employer_request.employer_name }}</p>
+                    <p class="mb-1"><strong>Work Category:</strong> {{ employer_request.work_category }}</p>
+                    <p class="mb-1"><strong>Work Type:</strong> {{ employer_request.work_type_label }}</p>
+                    <p class="mb-1"><strong>Email:</strong> {{ employer_request.email }}</p>
+                    <p class="mb-1"><strong>Phone:</strong> {{ employer_request.phone_number }}</p>
+                </div>
+
+                <form method="post" action="{{ url_for('admin.update_employer_request', id=employer_request.id) }}">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.status.label }}
+                        {{ form.status(class="form-control") }}
+                        {% for error in form.status.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group mb-0">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('admin.requests') }}" class="btn btn-outline-secondary ml-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

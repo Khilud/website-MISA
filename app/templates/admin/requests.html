@@ -24,6 +24,7 @@
                                 <th>Service</th>
                                 <th>Request Date</th>
                                 <th>Status</th>
+                                <th>Career Details</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -31,7 +32,7 @@
                             {% for request in requests %}
                             <tr>
                                 <td>{{ request.id }}</td>
-                                <td>{{ request.client.username }}</td>
+                                <td>{{ request.requester_name }}</td>
                                 <td>{{ request.service_type.name }}</td>
                                 <td>{{ request.request_date.strftime('%Y-%m-%d') }}</td>
                                 <td>
@@ -52,6 +53,19 @@
                                     {% endif %}
                                 </td>
                                 <td>
+                                    {% if request.degree_level or request.past_degree or request.experience or request.italian_language_level or request.languages %}
+                                    <small>
+                                        <strong>Degree:</strong> {{ request.degree_level or '-' }}<br>
+                                        <strong>Past:</strong> {{ request.past_degree or '-' }}<br>
+                                        <strong>Exp:</strong> {{ request.experience|truncate(30) if request.experience else '-' }}<br>
+                                        <strong>Italian:</strong> {{ request.italian_language_level or '-' }}<br>
+                                        <strong>Other:</strong> {{ request.languages or '-' }}
+                                    </small>
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
                                     <a href="{{ url_for('admin.update_request', id=request.id) }}" class="btn btn-sm btn-primary">Update</a>
                                 </td>
                             </tr>
@@ -61,6 +75,85 @@
                 </div>
                 {% else %}
                 <div class="alert alert-info">No service requests found.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="mb-3">Employer Worker Requests</h4>
+                {% if employer_requests %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Employer</th>
+                                <th>Work Type</th>
+                                <th>Category</th>
+                                <th>Duration</th>
+                                <th>Contact</th>
+                                <th>Address</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in employer_requests %}
+                            <tr>
+                                <td>{{ request.id }}</td>
+                                <td>{{ request.employer_name }}</td>
+                                <td>{{ request.work_type_label }}</td>
+                                <td>{{ request.work_category }}</td>
+                                <td>
+                                    {% if request.work_type == 'short_term' %}
+                                    {{ request.short_term_days or '-' }} day(s)
+                                    {% else %}
+                                    Long-term
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small>
+                                        <strong>Email:</strong> {{ request.email }}<br>
+                                        <strong>Phone:</strong> {{ request.phone_number }}
+                                    </small>
+                                </td>
+                                <td>
+                                    <small>{{ request.address }}</small>
+                                </td>
+                                <td>{{ request.request_date.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    {% if request.status == 'pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                    {% elif request.status == 'processing' %}
+                                    <span class="badge badge-info">Processing</span>
+                                    {% elif request.status == 'approved' %}
+                                    <span class="badge badge-primary">Approved</span>
+                                    {% elif request.status == 'completed' %}
+                                    <span class="badge badge-success">Completed</span>
+                                    {% elif request.status == 'done' %}
+                                    <span class="badge badge-success">Done</span>
+                                    {% elif request.status == 'cancelled' %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">{{ request.status|title }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('admin.update_employer_request', id=request.id) }}" class="btn btn-sm btn-primary">Update</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info mb-0">No employer worker requests found.</div>
                 {% endif %}
             </div>
         </div>

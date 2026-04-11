@@ -7,6 +7,11 @@
     <div class="col-md-12">
         <h2>Available Services</h2>
         <p class="lead">Choose from our comprehensive range of services designed for international students</p>
+        <div class="alert alert-light border">
+            <strong>Are you an employer?</strong>
+            Request a worker for long-term or short-term tasks here:
+            <a href="{{ url_for('service.employer_request') }}" class="btn btn-sm btn-outline-primary ml-2">Employer Worker Request</a>
+        </div>
         <hr>
     </div>
 </div>
@@ -20,6 +25,9 @@
             <button type="button" class="btn btn-outline-primary" onclick="showCategory('Housing')" style="border-color: #1800ad; color: #1800ad;">Housing</button>
             <button type="button" class="btn btn-outline-primary" onclick="showCategory('Language')" style="border-color: #1800ad; color: #1800ad;">Language</button>
             <button type="button" class="btn btn-outline-primary" onclick="showCategory('Transportation')" style="border-color: #1800ad; color: #1800ad;">Transportation</button>
+            <button type="button" class="btn btn-outline-primary" onclick="showCategory('Group Tour')" style="border-color: #1800ad; color: #1800ad;">Group Tour</button>
+                        <button type="button" class="btn btn-outline-primary" onclick="showCategory('Medical')" style="border-color: #1800ad; color: #1800ad;">Medical</button>
+            <button type="button" class="btn btn-outline-primary" onclick="showCategory('Career')" style="border-color: #1800ad; color: #1800ad;">Career</button>
         </div>
     </div>
 </div>
@@ -44,7 +52,7 @@
                     <div class="card-footer">
                         <a href="{{ url_for('service.details', id=service.id) }}" class="btn btn-primary btn-sm">View Details</a>
                         {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('service.request_specific_service', id=service.id) }}" class="btn btn-success btn-sm">Request Now</a>
+                        <a href="{{ url_for('service.request_specific_service', id=service.id) }}" class="btn btn-info btn-sm">Request Now</a>
                         {% endif %}
                     </div>
                 </div>

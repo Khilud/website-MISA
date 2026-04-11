@@ -15,9 +15,30 @@
                     <form method="post" action="{{ url_for('auth.register') }}">
                         {{ form.hidden_tag() }}
                         <div class="form-group">
-                            {{ form.username.label(class="form-label") }}
-                            {{ form.username(class="form-control", placeholder="Choose a username") }}
-                            {% for error in form.username.errors %}
+                            {{ form.first_name.label(class="form-label") }}
+                            {{ form.first_name(class="form-control", placeholder="Enter your first name") }}
+                            {% for error in form.first_name.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.surname.label(class="form-label") }}
+                            {{ form.surname(class="form-control", placeholder="Enter your surname") }}
+                            {% for error in form.surname.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.department.label(class="form-label") }}
+                            {{ form.department(class="form-control", placeholder="Enter your department") }}
+                            {% for error in form.department.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.phone_number.label(class="form-label") }}
+                            {{ form.phone_number(class="form-control", placeholder="Enter your phone number") }}
+                            {% for error in form.phone_number.errors %}
                             <span class="text-danger">{{ error }}</span>
                             {% endfor %}
                         </div>

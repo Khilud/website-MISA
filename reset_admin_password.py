@@ -21,7 +21,7 @@ def reset_admin_password():
             db.session.commit()
             
             print(f"Admin password reset successfully!")
-            print(f"Username: {admin_user.username}")
+            print(f"Name: {admin_user.display_name}")
             print(f"Email: {admin_user.email}")
             print(f"New Password: {new_password}")
             print("\nYou can now login with these credentials.")

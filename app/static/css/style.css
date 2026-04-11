@@ -174,8 +174,8 @@ html {
 }
 
 .navbar-logo {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     object-fit: cover;
     object-position: center;
@@ -194,18 +194,20 @@ html {
 /* Alternative navbar logo fitting options */
 .navbar-logo.logo-contain {
     object-fit: contain;
-    padding: 5px;
+    padding: 2px;
     background: rgba(255, 255, 255, 0.1);
 }
 
 .navbar-logo.logo-square {
     border-radius: 8px;
+    padding: 2px;
 }
 
 .navbar-logo.logo-rectangular {
     border-radius: 6px;
-    width: 50px;
-    height: 35px;
+    width: 52px;
+    height: 38px;
+    padding: 2px;
 }
 
 @keyframes logoSpin {
@@ -512,9 +514,17 @@ footer {
     border-radius: var(--border-radius-lg);
     border: 2px solid var(--gray-200);
     padding: 0.75rem 1rem;
+    min-height: calc(1.5em + 1.5rem + 2px);
+    height: auto;
+    line-height: 1.4;
     font-size: 0.875rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: var(--white);
+}
+
+select.form-control {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
 }
 
 .form-control:focus {
@@ -1158,8 +1168,8 @@ main {
     position: absolute;
     top: 2rem;
     right: 2rem;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     background: var(--background-cream);
     border-radius: 50%;
     display: flex;
@@ -1188,8 +1198,8 @@ main {
 }
 
 .hero-logo img {
-    width: 90px;
-    height: 90px;
+    width: 112px;
+    height: 112px;
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
@@ -1199,12 +1209,59 @@ main {
 /* Alternative logo fitting options */
 .hero-logo img.logo-contain {
     object-fit: contain;
-    padding: 10px;
+    padding: 3px;
     background: var(--color-white);
 }
 
 .hero-logo img.logo-fill {
     object-fit: fill;
+}
+
+/* Responsive logo sizing */
+@media (max-width: 768px) {
+    .navbar-logo {
+        width: 42px;
+        height: 42px;
+    }
+
+    .navbar-logo.logo-rectangular {
+        width: 46px;
+        height: 34px;
+    }
+
+    .hero-logo {
+        top: 1rem;
+        right: 1rem;
+        width: 96px;
+        height: 96px;
+    }
+
+    .hero-logo img {
+        width: 90px;
+        height: 90px;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-logo {
+        width: 38px;
+        height: 38px;
+    }
+
+    .navbar-logo.logo-rectangular {
+        width: 42px;
+        height: 31px;
+    }
+
+    .hero-logo {
+        width: 84px;
+        height: 84px;
+    }
+
+    .hero-logo img {
+        width: 78px;
+        height: 78px;
+    }
 }
 
 .hero-logo-placeholder {

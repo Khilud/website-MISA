@@ -1,8 +1,11 @@
+import os
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
-from config import Config
+from werkzeug.middleware.proxy_fix import ProxyFix
+from config import DevelopmentConfig, ProductionConfig
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -10,9 +13,16 @@ login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.login_message = 'Please log in to access this page.'
 
-def create_app(config_class=Config):
+def create_app(config_class=None):
+    if config_class is None:
+        env_name = os.environ.get('FLASK_ENV', '').lower().strip()
+        config_class = ProductionConfig if env_name == 'production' else DevelopmentConfig
+
     app = Flask(__name__)
     app.config.from_object(config_class)
+
+    # Respect X-Forwarded-* headers from the hosting reverse proxy.
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
 
     db.init_app(app)
     migrate.init_app(app, db)

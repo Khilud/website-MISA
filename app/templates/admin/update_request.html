@@ -7,18 +7,26 @@
     <div class="col-md-8 offset-md-2">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h3 class="mb-0">Update Service Request #{{ request.id }}</h3>
+                <h3 class="mb-0">Update Service Request #{{ service_request.id }}</h3>
             </div>
             <div class="card-body">
                 <div class="mb-4">
                     <h5>Request Details:</h5>
-                    <p><strong>Client:</strong> {{ request.client.username }}</p>
-                    <p><strong>Service:</strong> {{ request.service_type.name }}</p>
-                    <p><strong>Request Date:</strong> {{ request.request_date.strftime('%Y-%m-%d') }}</p>
-                    <p><strong>Client Notes:</strong> {{ request.notes or 'None' }}</p>
+                    <p><strong>Client:</strong> {{ service_request.requester_name }}</p>
+                    <p><strong>Service:</strong> {{ service_request.service_type.name }}</p>
+                    <p><strong>Request Date:</strong> {{ service_request.request_date.strftime('%Y-%m-%d') }}</p>
+                    <p><strong>Client Notes:</strong> {{ service_request.notes or 'None' }}</p>
+                    {% if service_request.degree_level or service_request.past_degree or service_request.experience or service_request.italian_language_level or service_request.languages %}
+                    <hr>
+                    <p><strong>Degree Level:</strong> {{ service_request.degree_level or '-' }}</p>
+                    <p><strong>Past Degree:</strong> {{ service_request.past_degree or '-' }}</p>
+                    <p><strong>Experience:</strong> {{ service_request.experience or '-' }}</p>
+                    <p><strong>Italian Level:</strong> {{ service_request.italian_language_level or '-' }}</p>
+                    <p><strong>Other Languages:</strong> {{ service_request.languages or '-' }}</p>
+                    {% endif %}
                 </div>
 
-                <form method="post" action="{{ url_for('admin.update_request', id=request.id) }}">
+                <form method="post" action="{{ url_for('admin.update_request', id=service_request.id) }}">
                     {{ form.hidden_tag() }}
                     <div class="form-group">
                         {{ form.status.label }}
