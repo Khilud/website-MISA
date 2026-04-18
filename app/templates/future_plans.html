@@ -132,8 +132,10 @@
         }
 
         .commitment-item:hover {
-            transform: translateX(10px);
-            box-shadow: 0 10px 20px rgba(24, 0, 173, 0.1);
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(24, 0, 173, 0.2);
+            background: linear-gradient(135deg, #e6f3ff 0%, #d4e8ff 100%);
+            border-left-color: var(--accent-yellow);
         }
 
         .commitment-item::before {
@@ -231,10 +233,8 @@
         }
 
         .plan-item:hover {
-            background: linear-gradient(135deg, #f8fafc 0%, #f0f8ff 100%);
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
             border-radius: 10px;
-            padding-left: 1rem;
-            margin: 0 -1rem;
         }
 
         .plan-item-icon {
@@ -362,6 +362,66 @@
             .section-title {
                 font-size: 2.2rem;
             }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .vision-card {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .plan-category {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .commitment-item {
+            animation: fadeIn 0.5s ease-out backwards;
+        }
+
+        .commitment-item:nth-child(1) { animation-delay: 0.1s; }
+        .commitment-item:nth-child(2) { animation-delay: 0.2s; }
+        .commitment-item:nth-child(3) { animation-delay: 0.3s; }
+        .commitment-item:nth-child(4) { animation-delay: 0.4s; }
+        .commitment-item:nth-child(5) { animation-delay: 0.5s; }
+        .commitment-item:nth-child(6) { animation-delay: 0.6s; }
+
+        .plan-item {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .founder-card {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .commitment-item::before {
+            animation: pulse 2s ease-in-out infinite;
         }
     </style>
 </head>
@@ -672,7 +732,7 @@
                 <hr class="footer-divider">
                 <div class="row">
                     <div class="col-md-6">
-                        <p class="footer-copyright">&copy; 2025 MISA - Messina International Students Association. All rights reserved.</p>
+                        <p class="footer-copyright">&copy; <span id="footer-year"></span> MISA - Messina International Students Association. All rights reserved.</p>
                     </div>
                     <div class="col-md-6 text-md-right">
                         <p class="footer-credit">Empowering International Students</p>

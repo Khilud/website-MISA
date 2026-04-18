@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
-from app.models import Service, ServiceRequest, EmployerWorkerRequest
+from app.models import Service, ServiceRequest, EmployerWorkerRequest, map_service_category_to_request_type
 from app.forms import ServiceRequestForm, EmployerWorkerRequestForm
 
 service = Blueprint('service', __name__, url_prefix='/service')
@@ -13,6 +13,10 @@ def is_career_service(service_obj):
 
 def is_group_tour_service(service_obj):
     return service_obj.category == 'Group Tour' and service_obj.subcategory == 'Sicily Tour'
+
+
+def is_housing_permanent_service(service_obj):
+    return service_obj.category == 'Housing' and service_obj.subcategory == 'Permanent'
 
 
 def is_other_language_service(service_obj):
@@ -81,25 +85,36 @@ def request_service():
             missing = [label for label, value in required_fields if not value or not str(value).strip()]
             if missing:
                 flash('Degree level, past degree, and Italian language level are required for Internship and Job Application requests. Experience is optional.')
-                return render_template('service/request.html', form=form, services=services, is_career_service=False)
+                return render_template('service/request.html', form=form, services=services, is_career_service=False, is_housing_permanent_service=is_housing_permanent_service(selected_service))
 
         if is_group_tour_service(selected_service) and not (form.tour_cities.data or '').strip():
             flash('Please enter at least one city in Sicily for your group tour.')
-            return render_template('service/request.html', form=form, services=services, is_career_service=False)
+            return render_template('service/request.html', form=form, services=services, is_career_service=False, is_housing_permanent_service=is_housing_permanent_service(selected_service))
 
         if is_other_language_service(selected_service) and not (form.preferred_language.data or '').strip():
             flash('Please choose your preferred language for this language support request.')
-            return render_template('service/request.html', form=form, services=services, is_career_service=False)
+            return render_template('service/request.html', form=form, services=services, is_career_service=False, is_housing_permanent_service=is_housing_permanent_service(selected_service))
 
         if is_translation_service(selected_service):
             source_language = (form.translation_from_language.data or '').strip()
             target_language = (form.translation_to_language.data or '').strip()
             if not source_language or not target_language:
                 flash('Please choose both source and target language for translation.')
-                return render_template('service/request.html', form=form, services=services, is_career_service=False)
+                return render_template('service/request.html', form=form, services=services, is_career_service=False, is_housing_permanent_service=is_housing_permanent_service(selected_service))
             if source_language == target_language:
                 flash('Source and target language must be different for translation.')
-                return render_template('service/request.html', form=form, services=services, is_career_service=False)
+                return render_template('service/request.html', form=form, services=services, is_career_service=False, is_housing_permanent_service=is_housing_permanent_service(selected_service))
+
+        if is_housing_permanent_service(selected_service):
+            housing_required_fields = [
+                form.room_type.data,
+                form.housing_budget.data,
+                form.housing_preferred_location.data,
+                form.housing_duration.data,
+            ]
+            if any(value in (None, '', []) for value in housing_required_fields):
+                flash('Please complete room type, budget, preferred location, and duration for permanent housing requests.')
+                return render_template('service/request.html', form=form, services=services, is_career_service=False, is_housing_permanent_service=True)
 
         # Check if user already has a pending request for this service
         existing_request = ServiceRequest.query.filter_by(
@@ -115,6 +130,7 @@ def request_service():
         service_request = ServiceRequest(
             user_id=current_user.id,
             service_id=form.service_id.data,
+            request_type=map_service_category_to_request_type(selected_service.category),
             requester_full_name=current_user.full_name or current_user.email,
             notes=build_request_notes(
                 form.notes.data,
@@ -127,14 +143,18 @@ def request_service():
             past_degree=form.past_degree.data,
             experience=form.experience.data,
             italian_language_level=form.italian_language_level.data,
-            languages=form.languages.data
+            languages=form.languages.data,
+            housing_room_type=form.room_type.data,
+            housing_budget=form.housing_budget.data,
+            housing_preferred_location=form.housing_preferred_location.data,
+            housing_duration=form.housing_duration.data,
         )
         db.session.add(service_request)
         db.session.commit()
         flash('Service request submitted successfully!')
         return redirect(url_for('dashboard.requests'))
     
-    return render_template('service/request.html', form=form, services=services, is_career_service=False)
+    return render_template('service/request.html', form=form, services=services, is_career_service=False, is_housing_permanent_service=False)
 
 @service.route('/<int:id>/request', methods=['GET', 'POST'])
 @login_required 
@@ -156,25 +176,36 @@ def request_specific_service(id):
             missing = [label for label, value in required_fields if not value or not str(value).strip()]
             if missing:
                 flash('Degree level, past degree, and Italian language level are required for Internship and Job Application requests. Experience is optional.')
-                return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service))
+                return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service), is_housing_permanent_service=is_housing_permanent_service(service))
 
         if is_group_tour_service(service) and not (form.tour_cities.data or '').strip():
             flash('Please enter at least one city in Sicily for your group tour.')
-            return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service))
+            return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service), is_housing_permanent_service=is_housing_permanent_service(service))
 
         if is_other_language_service(service) and not (form.preferred_language.data or '').strip():
             flash('Please choose your preferred language for this language support request.')
-            return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service))
+            return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service), is_housing_permanent_service=is_housing_permanent_service(service))
 
         if is_translation_service(service):
             source_language = (form.translation_from_language.data or '').strip()
             target_language = (form.translation_to_language.data or '').strip()
             if not source_language or not target_language:
                 flash('Please choose both source and target language for translation.')
-                return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service))
+                return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service), is_housing_permanent_service=is_housing_permanent_service(service))
             if source_language == target_language:
                 flash('Source and target language must be different for translation.')
-                return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service))
+                return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service), is_housing_permanent_service=is_housing_permanent_service(service))
+
+        if is_housing_permanent_service(service):
+            housing_required_fields = [
+                form.room_type.data,
+                form.housing_budget.data,
+                form.housing_preferred_location.data,
+                form.housing_duration.data,
+            ]
+            if any(value in (None, '', []) for value in housing_required_fields):
+                flash('Please complete room type, budget, preferred location, and duration for permanent housing requests.')
+                return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service), is_housing_permanent_service=True)
 
         # Check if user already has a pending request for this service
         existing_request = ServiceRequest.query.filter_by(
@@ -190,6 +221,7 @@ def request_specific_service(id):
         service_request = ServiceRequest(
             user_id=current_user.id,
             service_id=service.id,
+            request_type=map_service_category_to_request_type(service.category),
             requester_full_name=current_user.full_name or current_user.email,
             notes=build_request_notes(
                 form.notes.data,
@@ -202,14 +234,18 @@ def request_specific_service(id):
             past_degree=form.past_degree.data,
             experience=form.experience.data,
             italian_language_level=form.italian_language_level.data,
-            languages=form.languages.data
+            languages=form.languages.data,
+            housing_room_type=form.room_type.data,
+            housing_budget=form.housing_budget.data,
+            housing_preferred_location=form.housing_preferred_location.data,
+            housing_duration=form.housing_duration.data,
         )
         db.session.add(service_request)
         db.session.commit()
         flash('Service request submitted successfully!')
         return redirect(url_for('dashboard.requests'))
     
-    return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service))
+    return render_template('service/request.html', form=form, service=service, is_career_service=is_career_service(service), is_housing_permanent_service=is_housing_permanent_service(service))
 
 
 @service.route('/employer-request', methods=['GET', 'POST'])

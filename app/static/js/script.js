@@ -1,6 +1,11 @@
 // Script for Service Portal
 
 document.addEventListener('DOMContentLoaded', function() {
+    const footerYear = document.getElementById('footer-year');
+    if (footerYear) {
+        footerYear.textContent = new Date(Date.now()).getFullYear();
+    }
+
     // Enable tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {

@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
 from app.models import User, Service, ServiceRequest, EmployerWorkerRequest
-from app.forms import ServiceForm, UpdateRequestForm, UpdateEmployerRequestStatusForm
+from app.forms import ServiceForm, UpdateRequestForm, UpdateEmployerRequestStatusForm, DeleteUserForm
 from datetime import datetime
 from functools import wraps
 
@@ -81,9 +81,75 @@ def edit_service(id):
 @login_required
 @admin_required
 def requests():
-    requests = ServiceRequest.query.all()
-    employer_requests = EmployerWorkerRequest.query.order_by(EmployerWorkerRequest.request_date.desc()).all()
-    return render_template('admin/requests.html', requests=requests, employer_requests=employer_requests)
+    selected_status = (request.args.get('status') or '').strip().lower()
+
+    requests_query = ServiceRequest.query.order_by(ServiceRequest.request_date.desc())
+    employer_requests_query = EmployerWorkerRequest.query.order_by(EmployerWorkerRequest.request_date.desc())
+
+    if selected_status == 'pending':
+        requests_query = requests_query.filter(ServiceRequest.status == 'pending')
+        employer_requests_query = employer_requests_query.filter(EmployerWorkerRequest.status == 'pending')
+
+    requests = requests_query.all()
+    grouped_requests = {
+        'documentation': [],
+        'language': [],
+        'housing': [],
+        'career': [],
+        'tour': [],
+        'other': [],
+    }
+
+    for service_request in requests:
+        grouped_requests.setdefault(service_request.request_type_key, []).append(service_request)
+
+    request_sections = [
+        {'key': 'documentation', 'label': 'Documentation', 'requests': grouped_requests['documentation']},
+        {'key': 'language', 'label': 'Language', 'requests': grouped_requests['language']},
+        {'key': 'housing', 'label': 'Housing', 'requests': grouped_requests['housing']},
+        {'key': 'career', 'label': 'Career', 'requests': grouped_requests['career']},
+        {'key': 'tour', 'label': 'Tour', 'requests': grouped_requests['tour']},
+    ]
+    other_requests = grouped_requests['other']
+    employer_requests = employer_requests_query.all()
+    return render_template(
+        'admin/requests.html',
+        requests=requests,
+        request_sections=request_sections,
+        other_requests=other_requests,
+        employer_requests=employer_requests,
+        selected_status=selected_status,
+    )
+
+
+@admin.route('/users')
+@login_required
+@admin_required
+def users():
+    users = User.query.order_by(User.is_admin.desc(), User.full_name.asc()).all()
+    delete_form = DeleteUserForm()
+    return render_template('admin/users.html', users=users, delete_form=delete_form)
+
+
+@admin.route('/users/<int:id>/delete', methods=['POST'])
+@login_required
+@admin_required
+def delete_user(id):
+    form = DeleteUserForm()
+    if not form.validate_on_submit():
+        flash('Invalid delete request.')
+        return redirect(url_for('admin.users'))
+
+    user = User.query.get_or_404(id)
+    if user.id == current_user.id:
+        flash('You cannot delete your own account.')
+        return redirect(url_for('admin.users'))
+
+    ServiceRequest.query.filter_by(user_id=user.id).delete(synchronize_session=False)
+    db.session.delete(user)
+    db.session.commit()
+    flash('User deleted successfully.')
+    return redirect(url_for('admin.users'))
 
 @admin.route('/requests/<int:id>/update', methods=['GET', 'POST'])
 @login_required
@@ -94,7 +160,7 @@ def update_request(id):
     if form.validate_on_submit():
         service_request.status = form.status.data
         service_request.notes = form.notes.data
-        if form.status.data in ['completed', 'done']:
+        if form.status.data == 'completed':
             service_request.completion_date = datetime.utcnow()
         db.session.commit()
         flash('Request updated successfully!')

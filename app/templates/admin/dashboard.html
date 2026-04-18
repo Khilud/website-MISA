@@ -16,7 +16,7 @@
             <div class="card-body">
                 <h5 class="card-title">Users</h5>
                 <h2 class="display-4">{{ users_count }}</h2>
-                <a href="#" class="text-white">Manage Users</a>
+                <a href="{{ url_for('admin.users') }}" class="text-white">Manage Users</a>
             </div>
         </div>
     </div>
@@ -43,22 +43,7 @@
             <div class="card-body">
                 <h5 class="card-title">Pending Requests</h5>
                 <h2 class="display-4">{{ pending_requests }}</h2>
-                <a href="{{ url_for('admin.requests') }}" class="text-white">View Pending</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mt-4">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="mb-0">Quick Actions</h4>
-            </div>
-            <div class="card-body">
-                <a href="{{ url_for('admin.add_service') }}" class="btn btn-primary mr-2">Add New Service</a>
-                <a href="{{ url_for('admin.services') }}" class="btn btn-secondary mr-2">Manage Services</a>
-                <a href="{{ url_for('admin.requests') }}" class="btn btn-info">Manage Requests</a>
+                <a href="{{ url_for('admin.requests', status='pending') }}" class="text-white">View Pending</a>
             </div>
         </div>
     </div>

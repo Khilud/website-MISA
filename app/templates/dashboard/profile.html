@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Profile | Service Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card mb-4 profile-edit-card">
+            <div class="card-header">
+                <h4 class="mb-0">Your Profile</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('dashboard.profile') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.full_name.label(class="form-label") }}
+                        {{ form.full_name(class="form-control", placeholder="Enter your full name") }}
+                        {% for error in form.full_name.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.gender.label(class="form-label") }}
+                        {{ form.gender(class="form-control") }}
+                        {% for error in form.gender.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.department.label(class="form-label") }}
+                        {{ form.department(class="form-control", placeholder="Enter your department") }}
+                        {% for error in form.department.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.phone_number.label(class="form-label") }}
+                        {{ form.phone_number(class="form-control", placeholder="Enter your phone number") }}
+                        {% for error in form.phone_number.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control", placeholder="Enter your email address") }}
+                        {% for error in form.email.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group mb-0">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-secondary ml-2">Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

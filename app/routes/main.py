@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, jsonify , request
 from flask_login import current_user , login_required
-from app.models import Service , ServiceRequest
+from app.models import Service , ServiceRequest, map_service_category_to_request_type
 from app import db
 
 main = Blueprint('main', __name__)
@@ -62,6 +62,8 @@ def add_service():
         new_request = ServiceRequest(
             user_id=current_user.id,
             service_id=service_id,
+            request_type=map_service_category_to_request_type(service.category),
+            requester_full_name=current_user.full_name or current_user.email,
             status='pending'
         )
         db.session.add(new_request)

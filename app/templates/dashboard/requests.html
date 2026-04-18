@@ -20,11 +20,13 @@
                         <thead>
                             <tr>
                                 <th>Request ID</th>
-                                <th>Service</th>
+                                <th>Full Name</th>
+                                <th>Service Requested</th>
                                 <th>Request Date</th>
                                 <th>Completion Date</th>
                                 <th>Status</th>
                                 <th>Notes</th>
+                                <th>Housing Details</th>
                                 <th>Career Details</th>
                             </tr>
                         </thead>
@@ -32,6 +34,7 @@
                             {% for request in requests %}
                             <tr>
                                 <td>{{ request.id }}</td>
+                                <td>{{ current_user.full_name }}</td>
                                 <td>{{ request.service_type.name }}</td>
                                 <td>{{ request.request_date.strftime('%Y-%m-%d') }}</td>
                                 <td>
@@ -68,6 +71,18 @@
                                     </details>
                                     {% else %}
                                     <small class="text-muted">-</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if request.housing_room_type or request.housing_budget or request.housing_preferred_location or request.housing_duration %}
+                                    <small>
+                                        <strong>Room:</strong> {{ request.housing_room_type or '-' }}<br>
+                                        <strong>Budget:</strong> {{ request.housing_budget if request.housing_budget is not none else '-' }}<br>
+                                        <strong>Location:</strong> {{ request.housing_preferred_location or '-' }}<br>
+                                        <strong>Duration:</strong> {{ request.housing_duration or '-' }}
+                                    </small>
+                                    {% else %}
+                                    -
                                     {% endif %}
                                 </td>
                                 <td>

@@ -7,7 +7,7 @@
     <div class="col-md-8 offset-md-2">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h3 class="mb-0">
+                <h3 class="mb-0 text-white">
                     {% if service %}
                         Request Service: {{ service.name }}
                     {% else %}
@@ -64,6 +64,39 @@
                                 <span class="text-danger">{{ error }}</span>
                                 {% endfor %}
                                 <small class="form-text text-muted">Type the cities you want to visit, separated by commas.</small>
+                            </div>
+                        </div>
+
+                        <div id="housingFields" class="border rounded p-3 mb-3" {% if not is_housing_permanent_service %}style="display: none;"{% endif %}>
+                            <h5 class="mb-2">Permanent Housing Details</h5>
+                            <p class="text-muted mb-3">Tell us what you need so we can look for a suitable permanent housing option.</p>
+                            <div class="form-group">
+                                {{ form.room_type.label(class="form-label") }}
+                                {{ form.room_type(class="form-control") }}
+                                {% for error in form.room_type.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.housing_budget.label(class="form-label") }}
+                                {{ form.housing_budget(class="form-control", placeholder="e.g. 350") }}
+                                {% for error in form.housing_budget.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.housing_preferred_location.label(class="form-label") }}
+                                {{ form.housing_preferred_location(class="form-control", placeholder="Preferred neighborhood or area") }}
+                                {% for error in form.housing_preferred_location.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group mb-0">
+                                {{ form.housing_duration.label(class="form-label") }}
+                                {{ form.housing_duration(class="form-control", placeholder="e.g. 6 months") }}
+                                {% for error in form.housing_duration.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
                             </div>
                         </div>
 

@@ -3,23 +3,38 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
 
+REQUEST_TYPE_MAPPING = {
+    'Documentation': 'documentation',
+    'Language': 'language',
+    'Housing': 'housing',
+    'Career': 'career',
+    'Group Tour': 'tour',
+}
+
+REQUEST_TYPE_LABELS = {
+    'documentation': 'Documentation',
+    'language': 'Language',
+    'housing': 'Housing',
+    'career': 'Career',
+    'tour': 'Tour',
+    'other': 'Other',
+}
+
+
+def map_service_category_to_request_type(category):
+    return REQUEST_TYPE_MAPPING.get((category or '').strip(), 'other')
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, index=True)
-    first_name = db.Column(db.String(64))
-    surname = db.Column(db.String(64))
+    full_name = db.Column(db.String(120), nullable=False)
+    gender = db.Column(db.String(30), nullable=True)
     email = db.Column(db.String(120), unique=True, index=True)
     phone_number = db.Column(db.String(20))
     department = db.Column(db.String(64))
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False)
     requests = db.relationship('ServiceRequest', backref='client', lazy='dynamic')
-
-    @property
-    def full_name(self):
-        first = (self.first_name or '').strip()
-        last = (self.surname or '').strip()
-        return f'{first} {last}'.strip()
 
     @property
     def display_name(self):
@@ -60,6 +75,11 @@ class ServiceRequest(db.Model):
     experience = db.Column(db.Text, nullable=True)
     italian_language_level = db.Column(db.String(20), nullable=True)
     languages = db.Column(db.String(255), nullable=True)
+    housing_room_type = db.Column(db.String(60), nullable=True)
+    housing_budget = db.Column(db.Float, nullable=True)
+    housing_preferred_location = db.Column(db.String(120), nullable=True)
+    housing_duration = db.Column(db.String(80), nullable=True)
+    request_type = db.Column(db.String(20), nullable=False, default='other', index=True)
     requester_full_name = db.Column(db.String(140), nullable=True)
 
     @property
@@ -69,6 +89,17 @@ class ServiceRequest(db.Model):
         if self.client:
             return self.client.display_name
         return f'User ID {self.user_id}' if self.user_id else 'Unknown'
+
+    @property
+    def request_type_key(self):
+        if self.request_type:
+            return self.request_type
+        category = self.service_type.category if self.service_type else ''
+        return map_service_category_to_request_type(category)
+
+    @property
+    def request_type_label(self):
+        return REQUEST_TYPE_LABELS.get(self.request_type_key, 'Other')
     
     def __repr__(self):
         return f'<ServiceRequest {self.id}>'

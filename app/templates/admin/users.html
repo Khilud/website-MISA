@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users | Admin{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Manage Users</h2>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                {% if users %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Gender</th>
+                                <th>Department</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Requests</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.full_name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.gender or '-' }}</td>
+                                <td>{{ user.department or '-' }}</td>
+                                <td>{{ user.phone_number or '-' }}</td>
+                                <td>{{ 'Admin' if user.is_admin else 'User' }}</td>
+                                <td>{{ user.requests.count() }}</td>
+                                <td>
+                                    {% if user.id != current_user.id %}
+                                    <form method="post" action="{{ url_for('admin.delete_user', id=user.id) }}" class="d-inline" onsubmit="return confirm('Delete this user and their requests?');">
+                                        {{ delete_form.hidden_tag() }}
+                                        {{ delete_form.submit(class="btn btn-sm btn-danger") }}
+                                    </form>
+                                    {% else %}
+                                    <span class="text-muted">Current user</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info mb-0">No users found.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

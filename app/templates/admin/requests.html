@@ -3,6 +3,28 @@
 {% block title %}Manage Requests | Admin{% endblock %}
 
 {% block content %}
+<style>
+    /* Admin requests page only */
+    .admin-requests-page .table-responsive {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .admin-requests-page .btn-update-small {
+        padding: 0.4rem 1rem !important;
+        font-size: 0.82rem !important;
+        line-height: 1.2;
+    }
+
+    @media (max-width: 768px) {
+        .admin-requests-page .table-responsive {
+            padding-left: 0.4rem;
+            padding-right: 0.4rem;
+        }
+    }
+</style>
+
+<div class="admin-requests-page">
 <div class="row mb-4">
     <div class="col-md-12">
         <h2>Manage Service Requests</h2>
@@ -12,72 +34,147 @@
 
 <div class="row">
     <div class="col-md-12">
+        {% if requests %}
+            {% for section in request_sections %}
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">{{ section.label }}</h4>
+                    <span class="badge badge-primary">{{ section.requests|length }}</span>
+                </div>
+                <div class="card-body">
+                    {% if section.requests %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Full Name</th>
+                                    <th>Service Requested</th>
+                                    <th>Request Date</th>
+                                    <th>Status</th>
+                                    <th>Details</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for request in section.requests %}
+                                <tr>
+                                    <td>{{ request.id }}</td>
+                                    <td>{{ request.requester_name }}</td>
+                                    <td>{{ request.service_type.name }}</td>
+                                    <td>{{ request.request_date.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        {% if request.status == 'pending' %}
+                                        <span class="badge badge-warning">Pending</span>
+                                        {% elif request.status == 'processing' %}
+                                        <span class="badge badge-info">Processing</span>
+                                        {% elif request.status == 'approved' %}
+                                        <span class="badge badge-primary">Approved</span>
+                                        {% elif request.status == 'completed' %}
+                                        <span class="badge badge-success">Completed</span>
+                                        {% elif request.status == 'done' %}
+                                        <span class="badge badge-success">Done</span>
+                                        {% elif request.status == 'cancelled' %}
+                                        <span class="badge badge-danger">Cancelled</span>
+                                        {% else %}
+                                        <span class="badge badge-secondary">{{ request.status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if request.request_type_key == 'housing' and (request.housing_room_type or request.housing_budget or request.housing_preferred_location or request.housing_duration) %}
+                                        <small>
+                                            <strong>Room:</strong> {{ request.housing_room_type or '-' }}<br>
+                                            <strong>Budget:</strong> {{ request.housing_budget if request.housing_budget is not none else '-' }}<br>
+                                            <strong>Location:</strong> {{ request.housing_preferred_location or '-' }}<br>
+                                            <strong>Duration:</strong> {{ request.housing_duration or '-' }}
+                                        </small>
+                                        {% elif request.request_type_key == 'career' and (request.degree_level or request.past_degree or request.experience or request.italian_language_level or request.languages) %}
+                                        <small>
+                                            <strong>Degree:</strong> {{ request.degree_level or '-' }}<br>
+                                            <strong>Past:</strong> {{ request.past_degree or '-' }}<br>
+                                            <strong>Exp:</strong> {{ request.experience|truncate(30) if request.experience else '-' }}<br>
+                                            <strong>Italian:</strong> {{ request.italian_language_level or '-' }}<br>
+                                            <strong>Other:</strong> {{ request.languages or '-' }}
+                                        </small>
+                                        {% else %}
+                                        {{ request.notes or '-' }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('admin.update_request', id=request.id) }}" class="btn btn-sm btn-primary btn-update-small">Update</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-light mb-0">No {{ section.label|lower }} requests found.</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% if other_requests %}
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Other</h4>
+                    <span class="badge badge-primary">{{ other_requests|length }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Full Name</th>
+                                    <th>Service Requested</th>
+                                    <th>Request Date</th>
+                                    <th>Status</th>
+                                    <th>Details</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for request in other_requests %}
+                                <tr>
+                                    <td>{{ request.id }}</td>
+                                    <td>{{ request.requester_name }}</td>
+                                    <td>{{ request.service_type.name }}</td>
+                                    <td>{{ request.request_date.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        {% if request.status == 'pending' %}
+                                        <span class="badge badge-warning">Pending</span>
+                                        {% elif request.status == 'processing' %}
+                                        <span class="badge badge-info">Processing</span>
+                                        {% elif request.status == 'approved' %}
+                                        <span class="badge badge-primary">Approved</span>
+                                        {% elif request.status == 'completed' %}
+                                        <span class="badge badge-success">Completed</span>
+                                        {% elif request.status == 'cancelled' %}
+                                        <span class="badge badge-danger">Cancelled</span>
+                                        {% else %}
+                                        <span class="badge badge-secondary">{{ request.status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ request.notes or '-' }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin.update_request', id=request.id) }}" class="btn btn-sm btn-primary btn-update-small">Update</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% else %}
         <div class="card">
             <div class="card-body">
-                {% if requests %}
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Client</th>
-                                <th>Service</th>
-                                <th>Request Date</th>
-                                <th>Status</th>
-                                <th>Career Details</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for request in requests %}
-                            <tr>
-                                <td>{{ request.id }}</td>
-                                <td>{{ request.requester_name }}</td>
-                                <td>{{ request.service_type.name }}</td>
-                                <td>{{ request.request_date.strftime('%Y-%m-%d') }}</td>
-                                <td>
-                                    {% if request.status == 'pending' %}
-                                    <span class="badge badge-warning">Pending</span>
-                                    {% elif request.status == 'processing' %}
-                                    <span class="badge badge-info">Processing</span>
-                                    {% elif request.status == 'approved' %}
-                                    <span class="badge badge-primary">Approved</span>
-                                    {% elif request.status == 'completed' %}
-                                    <span class="badge badge-success">Completed</span>
-                                    {% elif request.status == 'done' %}
-                                    <span class="badge badge-success">Done</span>
-                                    {% elif request.status == 'cancelled' %}
-                                    <span class="badge badge-danger">Cancelled</span>
-                                    {% else %}
-                                    <span class="badge badge-secondary">{{ request.status|title }}</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if request.degree_level or request.past_degree or request.experience or request.italian_language_level or request.languages %}
-                                    <small>
-                                        <strong>Degree:</strong> {{ request.degree_level or '-' }}<br>
-                                        <strong>Past:</strong> {{ request.past_degree or '-' }}<br>
-                                        <strong>Exp:</strong> {{ request.experience|truncate(30) if request.experience else '-' }}<br>
-                                        <strong>Italian:</strong> {{ request.italian_language_level or '-' }}<br>
-                                        <strong>Other:</strong> {{ request.languages or '-' }}
-                                    </small>
-                                    {% else %}
-                                    -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <a href="{{ url_for('admin.update_request', id=request.id) }}" class="btn btn-sm btn-primary">Update</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="alert alert-info">No service requests found.</div>
-                {% endif %}
+                <div class="alert alert-info mb-0">No service requests found.</div>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 
@@ -145,7 +242,7 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <a href="{{ url_for('admin.update_employer_request', id=request.id) }}" class="btn btn-sm btn-primary">Update</a>
+                                    <a href="{{ url_for('admin.update_employer_request', id=request.id) }}" class="btn btn-sm btn-primary btn-update-small">Update</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -158,5 +255,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

@@ -15,11 +15,7 @@ Services | Service Portal
     <div class="col-md-8 offset-md-2">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h3 class="mb-0">{{ service.name }}</h3>
-                <span class="badge badge-light">{{ service.category }}</span>
-                {% if service.subcategory %}
-                <span class="badge badge-secondary">{{ service.subcategory }}</span>
-                {% endif %}
+                <h3 class="mb-0 text-white">{{ service.name }}</h3>
             </div>
             <div class="card-body">
                 <p class="lead">{{ service.description }}</p>

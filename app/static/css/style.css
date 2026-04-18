@@ -324,6 +324,15 @@ footer {
     background: var(--primary-gradient) !important;
 }
 
+.card-header.bg-primary h1,
+.card-header.bg-primary h2,
+.card-header.bg-primary h3,
+.card-header.bg-primary h4,
+.card-header.bg-primary h5,
+.card-header.bg-primary h6 {
+    color: var(--color-white) !important;
+}
+
 .card-body {
     padding: 2rem;
 }
@@ -743,7 +752,10 @@ h6 { font-size: 1rem; }
 main {
     background: var(--background-card);
     min-height: calc(100vh - 100px);
-}
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+}   
 
 .content-wrapper {
     background: var(--background-card);
@@ -761,6 +773,17 @@ main {
     transform: translateY(-3px);
     box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
     border-color: var(--primary-color);
+}
+
+.profile-summary-card,
+.profile-edit-card {
+    box-shadow: none !important;
+}
+
+.profile-summary-card:hover,
+.profile-edit-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
 }
 
 /* Custom service card styles */

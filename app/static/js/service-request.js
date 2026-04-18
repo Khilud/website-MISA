@@ -35,6 +35,7 @@ function handleServiceSelection() {
     const careerFieldsDiv = document.getElementById('careerFields');
     const tourFieldsDiv = document.getElementById('tourFields');
     const languageFieldsDiv = document.getElementById('languageFields');
+    const housingFieldsDiv = document.getElementById('housingFields');
     const otherLanguageField = document.getElementById('otherLanguageField');
     const translationDirectionField = document.getElementById('translationDirectionField');
     
@@ -59,6 +60,11 @@ function handleServiceSelection() {
             tourFieldsDiv.style.display = isGroupTour ? 'block' : 'none';
         }
 
+        if (housingFieldsDiv) {
+            const isPermanentHousing = service.category === 'Housing' && service.subcategory === 'Permanent';
+            housingFieldsDiv.style.display = isPermanentHousing ? 'block' : 'none';
+        }
+
         if (languageFieldsDiv) {
             const isLanguageOption = service.category === 'Language' && ['Other Language', 'Translation'].includes(service.subcategory);
             languageFieldsDiv.style.display = isLanguageOption ? 'block' : 'none';
@@ -80,6 +86,9 @@ function handleServiceSelection() {
         }
         if (tourFieldsDiv) {
             tourFieldsDiv.style.display = 'none';
+        }
+        if (housingFieldsDiv) {
+            housingFieldsDiv.style.display = 'none';
         }
         if (languageFieldsDiv) {
             languageFieldsDiv.style.display = 'none';

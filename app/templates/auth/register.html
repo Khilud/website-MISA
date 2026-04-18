@@ -8,23 +8,16 @@
         <div class="col-md-6 col-lg-5">
             <div class="card auth-card">
                 <div class="card-header">
-                    <h4 class="mb-0">Join MISC</h4>
+                    <h4 class="mb-0">Join MISA</h4>
                     <p class="mb-0 mt-2" style="font-size: 0.9rem; opacity: 0.9;">Create your account</p>
                 </div>
                 <div class="card-body">
                     <form method="post" action="{{ url_for('auth.register') }}">
                         {{ form.hidden_tag() }}
                         <div class="form-group">
-                            {{ form.first_name.label(class="form-label") }}
-                            {{ form.first_name(class="form-control", placeholder="Enter your first name") }}
-                            {% for error in form.first_name.errors %}
-                            <span class="text-danger">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                        <div class="form-group">
-                            {{ form.surname.label(class="form-label") }}
-                            {{ form.surname(class="form-control", placeholder="Enter your surname") }}
-                            {% for error in form.surname.errors %}
+                            {{ form.full_name.label(class="form-label") }}
+                            {{ form.full_name(class="form-control", placeholder="Enter your full name") }}
+                            {% for error in form.full_name.errors %}
                             <span class="text-danger">{{ error }}</span>
                             {% endfor %}
                         </div>

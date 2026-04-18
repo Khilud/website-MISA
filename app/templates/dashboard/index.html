@@ -3,6 +3,39 @@
 {% block title %}Dashboard | Service Portal{% endblock %}
 
 {% block content %}
+<style>
+    /* Dashboard-only styling */
+    .dashboard-soft-card .card-header {
+        background: linear-gradient(135deg, #1800ad 0%, #2348c2 100%) !important;
+        color: #ffffff !important;
+        padding: 0.8rem 1.2rem !important;
+        border-bottom: 2px solid #fbbf24;
+    }
+
+    .dashboard-soft-card .card-header h4 {
+        color: #ffffff !important;
+        font-size: 1.05rem;
+        line-height: 1.25;
+    }
+
+    .dashboard-requests-row {
+        margin-top: 1.5rem;
+    }
+
+    .dashboard-edit-btn {
+        border: 2px solid #ffffff !important;
+        color: #ffffff !important;
+        background: transparent !important;
+    }
+
+    .dashboard-edit-btn:hover,
+    .dashboard-edit-btn:focus {
+        background: #ffffff !important;
+        color: #1800ad !important;
+        border-color: #ffffff !important;
+    }
+</style>
+
 <div class="row">
     <div class="col-md-12">
         <h2>Your Dashboard</h2>
@@ -12,21 +45,36 @@
 
 <div class="row mb-4">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
+        <div class="card mb-4 profile-summary-card dashboard-soft-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="mb-0">Welcome, {{ current_user.display_name }}!</h4>
+                <a href="{{ url_for('dashboard.profile') }}" class="btn btn-sm dashboard-edit-btn">Edit Profile</a>
             </div>
             <div class="card-body">
-                <p>From here, you can view and manage your service requests.</p>
-                <a href="{{ url_for('service.index') }}" class="btn btn-outline-primary">Browse Services</a>
+                <div class="row">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <p class="mb-1"><strong>Full Name:</strong> {{ current_user.full_name }}</p>
+                        <p class="mb-1"><strong>Email:</strong> {{ current_user.email }}</p>
+                        <p class="mb-1"><strong>Phone:</strong> {{ current_user.phone_number or '-' }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <p class="mb-1"><strong>Department:</strong> {{ current_user.department or '-' }}</p>
+                        <p class="mb-1"><strong>Gender:</strong> {{ current_user.gender or '-' }}</p>
+                        <p class="mb-1"><strong>Role:</strong> {{ 'Admin' if current_user.is_admin else 'User' }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>From here, you can view and manage your service requests and keep your profile information up to date.</p>
+                        <a href="{{ url_for('service.index') }}" class="btn btn-outline-primary">Browse Services</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row">
+<div class="row dashboard-requests-row">
     <div class="col-md-12">
-        <div class="card">
+        <div class="card dashboard-soft-card">
             <div class="card-header">
                 <h4 class="mb-0">Recent Service Requests</h4>
             </div>

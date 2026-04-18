@@ -3,6 +3,15 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextA
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length, Optional, NumberRange
 from app.models import User
 
+GENDER_CHOICES = [
+    ('', 'Select gender...'),
+    ('female', 'Female'),
+    ('male', 'Male'),
+    ('non_binary', 'Non-binary'),
+    ('other', 'Other'),
+    ('prefer_not_to_say', 'Prefer not to say')
+]
+
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -10,8 +19,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 class RegistrationForm(FlaskForm):
-    first_name = StringField('First Name', validators=[DataRequired()])
-    surname = StringField('Surname', validators=[DataRequired()])
+    full_name = StringField('Full Name', validators=[DataRequired(), Length(max=120)])
     department = StringField('Department', validators=[DataRequired()])
     phone_number = StringField('Phone Number', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -21,7 +29,33 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
             
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
+        normalized_email = (email.data or '').strip()
+        email.data = normalized_email
+        user = User.query.filter_by(email=normalized_email).first()
+        if user is not None:
+            raise ValidationError('Please use a different email address.')
+
+
+class ProfileUpdateForm(FlaskForm):
+    full_name = StringField('Full Name', validators=[DataRequired(), Length(max=120)])
+    gender = SelectField('Gender', choices=GENDER_CHOICES, validators=[Optional()])
+    department = StringField('Department', validators=[Optional(), Length(max=64)])
+    phone_number = StringField('Phone Number', validators=[Optional(), Length(max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Save Changes')
+
+    def __init__(self, original_email=None, *args, **kwargs):
+        self.original_email = original_email
+        super(ProfileUpdateForm, self).__init__(*args, **kwargs)
+
+    def validate_email(self, email):
+        normalized_email = (email.data or '').strip()
+        email.data = normalized_email
+
+        if self.original_email and normalized_email.lower() == (self.original_email or '').strip().lower():
+            return
+
+        user = User.query.filter_by(email=normalized_email).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
@@ -98,6 +132,17 @@ class ServiceRequestForm(FlaskForm):
         ('Native', 'Native / Fluent')
     ], validators=[Optional()])
     languages = StringField('Other Languages', validators=[Optional(), Length(max=255)])
+    room_type = SelectField('Type of Room', choices=[
+        ('', 'Select room type...'),
+        ('single', 'Single room'),
+        ('shared', 'Shared room'),
+        ('studio', 'Studio apartment'),
+        ('apartment', 'Apartment'),
+        ('any', 'Any available option')
+    ], validators=[Optional()])
+    housing_budget = FloatField('Monthly Budget', validators=[Optional(), NumberRange(min=0)])
+    housing_preferred_location = StringField('Preferred Location', validators=[Optional(), Length(max=120)])
+    housing_duration = StringField('Duration of Stay', validators=[Optional(), Length(max=80)])
     submit = SubmitField('Submit Request')
     
     def __init__(self, *args, **kwargs):
@@ -110,11 +155,14 @@ class UpdateRequestForm(FlaskForm):
         ('processing', 'Processing'),
         ('approved', 'Approved'),
         ('completed', 'Completed'),
-        ('done', 'Done'),
         ('cancelled', 'Cancelled')
     ], validators=[DataRequired()])
     notes = TextAreaField('Admin Notes', validators=[Optional(), Length(max=1000)])
     submit = SubmitField('Update')
+
+
+class DeleteUserForm(FlaskForm):
+    submit = SubmitField('Delete User')
 
 
 class EmployerWorkerRequestForm(FlaskForm):
@@ -143,7 +191,6 @@ class UpdateEmployerRequestStatusForm(FlaskForm):
         ('processing', 'Processing'),
         ('approved', 'Approved'),
         ('completed', 'Completed'),
-        ('done', 'Done'),
         ('cancelled', 'Cancelled')
     ], validators=[DataRequired()])
     submit = SubmitField('Update')
